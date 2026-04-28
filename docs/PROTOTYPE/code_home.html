@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ARCHIVE.DEV - Senior Software Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,200;1,6..72,300;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c7c6c6",
+                        "background": "#fdf8f8",
+                        "inverse-surface": "#313030",
+                        "on-background": "#1c1b1b",
+                        "primary-container": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#484645",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#c8c6c5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#1c1b1a",
+                        "on-primary-fixed-variant": "#474746",
+                        "on-primary-fixed": "#1c1b1b",
+                        "on-surface-variant": "#444748",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "secondary": "#5e5e5e",
+                        "surface-dim": "#ddd9d8",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "on-secondary-fixed-variant": "#464747",
+                        "inverse-on-surface": "#f4f0ef",
+                        "primary": "#000000",
+                        "surface-tint": "#5f5e5e",
+                        "surface-container-low": "#f7f3f2",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#626262",
+                        "primary-fixed": "#e5e2e1",
+                        "surface-container-high": "#ebe7e6",
+                        "tertiary": "#000000",
+                        "secondary-container": "#e1dfdf",
+                        "tertiary-container": "#1c1b1a",
+                        "surface-bright": "#fdf8f8",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c4c7c7",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#858383",
+                        "secondary-fixed": "#e4e2e2",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-surface": "#1c1b1b",
+                        "on-tertiary-container": "#868382",
+                        "tertiary-fixed-dim": "#cac6c4",
+                        "surface-variant": "#e5e2e1",
+                        "outline": "#747878",
+                        "surface-container": "#f1edec",
+                        "tertiary-fixed": "#e6e2df",
+                        "surface": "#fdf8f8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "container-max": "1440px",
+                        "stack-sm": "8px",
+                        "margin": "64px",
+                        "unit": "4px",
+                        "stack-lg": "48px",
+                        "gutter": "32px",
+                        "stack-xl": "120px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Newsreader"],
+                        "headline-md": ["Newsreader"],
+                        "mono-small": ["monospace"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Newsreader"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "mono-small": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600" }],
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .hairline-b { border-bottom: 1px solid theme('colors.outline-variant'); }
+            .hairline-t { border-top: 1px solid theme('colors.outline-variant'); }
+            .hairline-l { border-left: 1px solid theme('colors.outline-variant'); }
+            .hairline-r { border-right: 1px solid theme('colors.outline-variant'); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary selection:text-on-primary flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="docked full-width top-0 border-b border-b border-[#BCBCB4] dark:border-[#2A2A2A] flat no shadows bg-[#F9F9F7] dark:bg-[#121212] z-50">
+<div class="flex justify-between items-center h-20 px-8 max-w-[1440px] mx-auto w-full">
+<div class="font-serif font-black italic text-2xl text-[#1A1A1A] dark:text-[#F9F9F7]">
+                ARCHIVE.DEV
+            </div>
+<nav class="hidden md:flex gap-8 font-serif text-lg tracking-tight uppercase">
+<a class="text-[#1A1A1A] dark:text-white border-b border-[#1A1A1A] dark:border-white font-medium hover:text-[#1A1A1A] dark:hover:text-white transition-all duration-300" href="#">WORK</a>
+<a class="text-[#BCBCB4] dark:text-[#666666] transition-colors hover:text-[#1A1A1A] dark:hover:text-white transition-all duration-300" href="#">ABOUT</a>
+<a class="text-[#BCBCB4] dark:text-[#666666] transition-colors hover:text-[#1A1A1A] dark:hover:text-white transition-all duration-300" href="#">CONTACT</a>
+</nav>
+<a class="text-[#1A1A1A] dark:text-[#F9F9F7] font-serif text-lg tracking-tight uppercase border border-[#1A1A1A] dark:border-[#F9F9F7] px-4 py-2 hover:bg-[#1A1A1A] hover:text-white dark:hover:bg-white dark:hover:text-[#1A1A1A] transition-colors duration-300 rounded-none" href="#">
+                RESUME
+            </a>
+</div>
+</header>
+<main class="flex-grow flex flex-col w-full max-w-[1440px] mx-auto px-8 py-stack-xl">
+<!-- Hero Section -->
+<section class="grid grid-cols-12 gap-gutter mb-stack-xl">
+<div class="col-span-12 md:col-span-10 lg:col-span-8 flex flex-col gap-stack-md">
+<h1 class="font-display-xl text-display-xl text-on-background">
+                    ARCHIVE.DEV /<br/>
+<span class="italic text-secondary">SENIOR SOFTWARE ENGINEER</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-stack-md">
+                    Crafting robust, scalable systems with a focus on mathematical precision and elegant architecture. Specializing in distributed systems and high-performance technical solutions for enterprise environments.
+                </p>
+</div>
+</section>
+<div class="w-full hairline-t mb-stack-xl"></div>
+<!-- Featured Projects -->
+<section class="flex flex-col gap-stack-lg mb-stack-xl">
+<div class="flex justify-between items-end mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-background">Selected Works</h2>
+<span class="font-mono-small text-mono-small text-secondary uppercase tracking-widest">2021 - 2024</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Project Card 1 -->
+<article class="flex flex-col gap-stack-sm group cursor-pointer">
+<div class="hairline-t pt-stack-sm mb-unit transition-colors duration-300 group-hover:border-on-background">
+<div class="relative aspect-[4/3] w-full overflow-hidden bg-surface-container-highest mb-stack-sm">
+<img alt="Project 1" class="object-cover w-full h-full grayscale group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="high contrast black and white photo of abstract data visualization lines representing a complex distributed system architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB40MCfshg1uoWttskr-Xu6v0_6h_WobLasiFrxQY8yQpUUIX4t8V3sx6xzJe0Omv20o5jp25wysU9V8OwBcPNNwY6hODj-iGiLHkSeMFSR0jzD1gpns2Ls0tlwWfwhUXAq2pMN0eaqveshcXPhCNgf_rNiMysNufPSi-OFXT9rFl_9fgLJV0BkRwJkgQlp21qziY3RMt-yDo4S4TwAWImvYXYzzg3xh0g8fS0IVPjQ8M-tWVf-v6vBG-9mL3_NsVOu4NJoAuJqIkA"/>
+</div>
+<div class="flex flex-col gap-unit px-unit">
+<span class="font-label-caps text-label-caps text-secondary">DISTRIBUTED SYSTEMS</span>
+<h3 class="font-headline-md text-headline-md text-on-background">Nexus Core</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">A high-throughput message orchestration layer built to handle millions of concurrent events with sub-millisecond latency.</p>
+<div class="flex gap-unit mt-stack-sm">
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">Go</span>
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">gRPC</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Project Card 2 -->
+<article class="flex flex-col gap-stack-sm group cursor-pointer">
+<div class="hairline-t pt-stack-sm mb-unit transition-colors duration-300 group-hover:border-on-background">
+<div class="relative aspect-[4/3] w-full overflow-hidden bg-surface-container-highest mb-stack-sm">
+<img alt="Project 2" class="object-cover w-full h-full grayscale group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="monochrome close up of glowing code on a dark screen showing complex backend logic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbqf_MyFIvdzv2SlA-oVCz4eTiIg9Mizioyeg943DCTMmr56sgRq9iHN0qbeJRR7xdqzn3j2fesqDsbsXWXjRFzowCSyWzWqQvmViQSh12boJkjZJUHyLEYwDDDDZHLZwPTkQTzepucPYm4hs2fukAwOxQSxJpZ5DGJZM3IZ8Z3ITk5kRyJHJeLeixS5zeutZoaL996vMG8F3x8zkC5jLQovkRlpsDYmQq6XXReDKGUuJRRtXEfwmvk94799yZ6b_R6zvCOXWDXq0"/>
+</div>
+<div class="flex flex-col gap-unit px-unit">
+<span class="font-label-caps text-label-caps text-secondary">INFRASTRUCTURE</span>
+<h3 class="font-headline-md text-headline-md text-on-background">Atlas Platform</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Automated provisioning and scaling infrastructure designed for global deployment footprints.</p>
+<div class="flex gap-unit mt-stack-sm">
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">Rust</span>
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">Kubernetes</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Project Card 3 -->
+<article class="flex flex-col gap-stack-sm group cursor-pointer">
+<div class="hairline-t pt-stack-sm mb-unit transition-colors duration-300 group-hover:border-on-background">
+<div class="relative aspect-[4/3] w-full overflow-hidden bg-surface-container-highest mb-stack-sm">
+<img alt="Project 3" class="object-cover w-full h-full grayscale group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="minimalist architectural photo of concrete server racks in a dark data center, high contrast black and white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYRsTUC9_iMGX5BZt7W7QDJu9-tD-P6kEDB_ublmsOGPLzf5Hf-D1lm1iv3UrCfUhO1WERCTyjpp189jVFUzrnO3CMQpFWtkGiNa5Ux62cgapvAEGMXx2yzP28kaiLxhhgDkt7xU9mR8AjhGUN6dQfYEhuvnpz6LVIgXlS8x4MrV6zR1KgGPJzE6B8Q-xRMi-ib4efJDGXq4wYeJnqmZ_ggmT1fH9T9gGa-_7XltzI8aa2h9OtIdaV4wZqaCCwe_bu_czaxKMAtKE"/>
+</div>
+<div class="flex flex-col gap-unit px-unit">
+<span class="font-label-caps text-label-caps text-secondary">MACHINE LEARNING</span>
+<h3 class="font-headline-md text-headline-md text-on-background">Synapse Engine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Real-time inference pipeline optimized for edge computing environments with extreme memory constraints.</p>
+<div class="flex gap-unit mt-stack-sm">
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">Python</span>
+<span class="font-mono-small text-mono-small text-on-surface-variant border border-outline-variant px-2 py-1">C++</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="mt-stack-lg flex justify-end">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-8 py-4 uppercase tracking-widest hover:bg-surface-tint transition-colors duration-300 rounded-none">
+                    SEE ALL WORK
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="full-width border-t border-t border-[#BCBCB4] dark:border-[#2A2A2A] flat no shadows bg-[#F9F9F7] dark:bg-[#121212]">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-[1440px] mx-auto w-full mt-24">
+<div class="font-serif font-bold text-lg text-[#1A1A1A] dark:text-[#F9F9F7]">
+                ARCHIVE.DEV
+            </div>
+<nav class="flex gap-6 mt-6 md:mt-0 font-mono text-[10px] tracking-widest uppercase">
+<a class="text-[#BCBCB4] dark:text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white underline-offset-4 hover:underline transition-colors duration-300" href="#">GITHUB</a>
+<a class="text-[#BCBCB4] dark:text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white underline-offset-4 hover:underline transition-colors duration-300" href="#">LINKEDIN</a>
+<a class="text-[#BCBCB4] dark:text-[#666666] hover:text-[#1A1A1A] dark:hover:text-white underline-offset-4 hover:underline transition-colors duration-300" href="#">READCV</a>
+</nav>
+<div class="text-[#BCBCB4] dark:text-[#666666] font-mono text-[10px] tracking-widest uppercase mt-6 md:mt-0">
+                © 2024 ARCHIVE. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>
