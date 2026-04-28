@@ -29,8 +29,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
   const completedRef = useRef(false);
 
   const [counterValue, setCounterValue] = useState("00");
-  const [isMobile, setIsMobile] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
   const [shouldRender, setShouldRender] = useState(true);
   const [startSequence, setStartSequence] = useState(false);
 
@@ -79,32 +79,22 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     reduceMotionQuery.addEventListener("change", syncMedia);
 
     return () => {
-      if (hideTimer) {
-        window.clearTimeout(hideTimer);
-      }
-      if (startTimer) {
-        window.clearTimeout(startTimer);
-      }
+      if (hideTimer) window.clearTimeout(hideTimer);
+      if (startTimer) window.clearTimeout(startTimer);
       mobileQuery.removeEventListener("change", syncMedia);
       reduceMotionQuery.removeEventListener("change", syncMedia);
     };
   }, [onComplete, onPhaseChange]);
 
   useEffect(() => {
-    if (!startSequence || !shouldRender) {
-      return;
-    }
+    if (!startSequence || !shouldRender) return;
 
     if (reduceMotion) {
       onPhaseChange("LOCKING");
-
       const timer = window.setTimeout(() => {
         complete();
       }, 180);
-
-      return () => {
-        window.clearTimeout(timer);
-      };
+      return () => window.clearTimeout(timer);
     }
 
     const hardTimeout = window.setTimeout(() => {
@@ -112,8 +102,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     }, 3000);
 
     const scrambleInterval = window.setInterval(() => {
-      const nextValue = String(Math.floor(Math.random() * 100)).padStart(2, "0");
-      setCounterValue(nextValue);
+      const next = String(Math.floor(Math.random() * 100)).padStart(2, "0");
+      setCounterValue(next);
     }, 40);
 
     const lockTimeout = window.setTimeout(() => {
@@ -131,9 +121,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
   useGSAP(
     () => {
-      if (!startSequence || !shouldRender || reduceMotion) {
-        return;
-      }
+      if (!startSequence || !shouldRender || reduceMotion || isMobile === null) return;
 
       const root = rootRef.current;
       const counter = counterRef.current;
@@ -178,10 +166,25 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       });
 
       timeline
-        .fromTo(counter, { scale: 1.2 }, { scale: 1, duration: 0.24, ease: "var(--ease-back)" }, 0.9)
+        .fromTo(
+          counter,
+          { scale: 1.2 },
+          { scale: 1, duration: 0.24, ease: "var(--ease-back)" },
+          0.9,
+        )
         .fromTo(underline, { scaleX: 0 }, { scaleX: 1, duration: 0.24 }, 0.9)
-        .from(nameSplit.elements, { autoAlpha: 0, y: 28, stagger: 0.028, duration: 0.42 }, 0.15)
-        .from(taglineSplit.elements, { autoAlpha: 0, y: 16, stagger: 0.06, duration: 0.32 }, 0.9)
+        .from(nameSplit.elements, {
+          autoAlpha: 0,
+          y: 28,
+          stagger: 0.028,
+          duration: 0.42,
+        }, 0.15)
+        .from(taglineSplit.elements, {
+          autoAlpha: 0,
+          y: 16,
+          stagger: 0.06,
+          duration: 0.32,
+        }, 0.9)
         .call(
           () => {
             onPhaseChange("CRACKING");
@@ -244,17 +247,25 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     },
   );
 
-  if (!shouldRender) {
-    return null;
-  }
+  if (!shouldRender || isMobile === null || reduceMotion === null) return null;
 
+  /* Clip paths for the crack panels */
   const topPanelClipPath = isMobile
     ? "polygon(0 0, 100% 0, 100% 50%, 0 50%)"
     : "polygon(0 0, 100% 0, 100% 100%, 0 30%)";
   const bottomPanelClipPath = isMobile
     ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
     : "polygon(0 30%, 100% 100%, 0 100%)";
+
   const displayCounterValue = reduceMotion && startSequence ? "100" : counterValue;
+
+  /* ─── Layout ────────────────────────────────────────────────────────────
+   *  Desktop (per design spec):
+   *    • Name + tagline: absolute, vertically centred, left edge (64px margin)
+   *    • Counter + underline: absolute, bottom-left (64px from edges)
+   *  Mobile:
+   *    • Simple flex-column layout at bottom of screen
+   * ──────────────────────────────────────────────────────────────────── */
 
   return (
     <div
@@ -262,6 +273,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       className="fixed inset-0 z-[100] overflow-hidden bg-[var(--color-preloader-bg)] text-white"
       aria-hidden={phase === "COMPLETE"}
     >
+      {/* Split panels that slide off on reveal */}
       <div
         ref={topPanelRef}
         className="absolute inset-0 bg-[var(--color-preloader-bg)]"
@@ -273,38 +285,82 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
         style={{ clipPath: bottomPanelClipPath }}
       />
 
-      <div className="relative z-[2] mx-auto flex h-full w-full max-w-[var(--grid-max-width)] flex-col justify-between px-[var(--space-5)] py-[var(--space-6)]">
-        <div className="flex-1" />
+      {/* ── Desktop: Name vertically centred on the left ── */}
+      <div
+        className={`
+          absolute z-[2]
+          hidden md:flex flex-col gap-[var(--space-3)]
+          left-[clamp(40px,4.5vw,80px)]
+          top-1/2 -translate-y-1/2
+        `}
+      >
+        <h1
+          ref={nameRef}
+          className="font-[var(--font-display-family)] text-[clamp(44px,6vw,var(--text-display))] font-[200] leading-[1.05] tracking-[-0.02em] text-white"
+        >
+          Ogwang Gift Gideon
+        </h1>
+        <p
+          ref={taglineRef}
+          className="text-[length:var(--text-body-md)] text-[var(--color-preloader-muted)]"
+        >
+          I build things that matter.
+        </p>
+      </div>
 
+      {/* ── Desktop: Counter bottom-left ── */}
+      <div
+        className={`
+          absolute z-[2]
+          hidden md:flex flex-col gap-[var(--space-2)]
+          left-[clamp(40px,4.5vw,80px)]
+          bottom-[clamp(40px,4.5vw,80px)]
+        `}
+      >
+        <span
+          ref={counterRef}
+          className="font-[var(--font-mono-family)] text-[clamp(48px,5.5vw,64px)] font-[700] leading-none tabular-nums text-[var(--color-amber)]"
+        >
+          {displayCounterValue}
+        </span>
+        <span
+          ref={underlineRef}
+          className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
+        />
+      </div>
+
+      {/* ── Mobile: stacked layout ── */}
+      <div className="relative z-[2] flex h-full w-full flex-col justify-between px-[var(--space-5)] py-[var(--space-6)] md:hidden">
+        <div className="flex-1" />
         <div className="flex flex-col gap-[var(--space-3)]">
           <h1
             ref={nameRef}
-            className="max-w-[14ch] font-[var(--font-display-family)] text-[clamp(40px,7vw,80px)] font-[200] leading-[1.05] text-white"
+            className="font-[var(--font-display-family)] text-[clamp(36px,9vw,52px)] font-[200] leading-[1.05] text-white"
           >
             Ogwang Gift Gideon
           </h1>
           <p
             ref={taglineRef}
-            className="text-[length:var(--text-body-md)] text-[rgba(255,255,255,0.6)]"
+            className="text-[length:var(--text-body-md)] text-[var(--color-preloader-muted)]"
           >
             I build things that matter.
           </p>
         </div>
-
         <div className="mt-[var(--space-6)] flex flex-col gap-[var(--space-2)]">
           <span
             ref={counterRef}
-            className="font-[var(--font-mono-family)] text-[clamp(40px,7vw,64px)] font-[700] text-[var(--color-amber)]"
+            className="font-[var(--font-mono-family)] text-[clamp(40px,10vw,56px)] font-[700] leading-none tabular-nums text-[var(--color-amber)]"
           >
             {displayCounterValue}
           </span>
           <span
             ref={underlineRef}
-            className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
+            className="block h-[2px] w-[160px] max-w-full bg-[var(--color-amber)]"
           />
         </div>
       </div>
 
+      {/* Crack / split line SVG */}
       <svg
         className="pointer-events-none absolute inset-0 z-[3] h-full w-full"
         viewBox="0 0 100 100"

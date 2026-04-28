@@ -9,6 +9,21 @@ interface CustomCursorProps {
   ready: boolean;
 }
 
+function useMediaQuery(query: string): boolean | null {
+  const [matches, setMatches] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    setMatches(mq.matches);
+
+    const listener = (ev: MediaQueryListEvent) => setMatches(ev.matches);
+    mq.addEventListener("change", listener);
+    return () => mq.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
+}
+
 interface CursorVisualState {
   variant: CursorVariant;
   label?: string;
@@ -71,6 +86,7 @@ function isCursorVariant(value: string | undefined): value is CursorVariant {
 }
 
 export function CustomCursor({ ready }: CustomCursorProps) {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const rootRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -269,7 +285,8 @@ export function CustomCursor({ ready }: CustomCursorProps) {
     <div
       ref={rootRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[95] hidden opacity-0 md:block"
+      className="pointer-events-none fixed inset-0 z-[95] opacity-0"
+      style={{ visibility: isDesktop ? "visible" : "hidden" }}
     >
       <div
         ref={ringRef}
