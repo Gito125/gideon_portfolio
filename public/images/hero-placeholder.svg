@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Hero Image Placeholder</title>
+  <desc id="desc">Temporary portrait placeholder for Ogwang Gift Gideon.</desc>
+  <defs>
+    <linearGradient id="heroBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAEEDA"/>
+      <stop offset="100%" stop-color="#F7F6F2"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#heroBg)"/>
+  <rect x="60" y="60" width="780" height="1080" fill="none" stroke="#BCBCB4" stroke-width="2"/>
+  <circle cx="450" cy="420" r="140" fill="#EF9F27" fill-opacity="0.2"/>
+  <path d="M260 790c45-84 118-132 190-132s145 48 190 132" fill="none" stroke="#639922" stroke-width="10"/>
+  <text x="450" y="980" fill="#1A1A1A" font-family="Inter, Arial, sans-serif" font-size="42" text-anchor="middle">
+    HERO IMAGE PLACEHOLDER
+  </text>
+  <text x="450" y="1035" fill="#666666" font-family="JetBrains Mono, monospace" font-size="24" text-anchor="middle">
+    REPLACE WITH FINAL PHOTO
+  </text>
+</svg>
