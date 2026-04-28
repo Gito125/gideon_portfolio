@@ -32,3 +32,5 @@ export const CLUB_PLUGIN_TODO = Object.freeze({
 });
 
 export { gsap, ScrollTrigger, useGSAP };
+
+registerGsapPlugins();

@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SectionReveal } from "@/components/shared/SectionReveal";
 import { stackGroups } from "@/data/stack";
 
 export default function AboutPage() {
   return (
-    <main className="overflow-x-hidden w-full max-w-full">
-      <section className="w-full bg-[var(--color-bg)]">
+    <main className="w-full max-w-full overflow-x-hidden pt-[96px]">
+      <SectionReveal as="section" className="w-full bg-[var(--color-bg)]">
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-7)] px-[var(--space-5)] py-[var(--space-8)]">
-          <div className="grid w-full gap-[var(--space-6)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
+          <div
+            data-reveal-child
+            className="grid w-full gap-[var(--space-6)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center"
+          >
             <div className="flex flex-col gap-[var(--space-4)]">
               <h1 className="text-[length:var(--text-headline-lg)] leading-[1.15]">
                 About
@@ -21,8 +25,9 @@ export default function AboutPage() {
               </p>
               <div className="flex flex-wrap gap-[var(--space-3)]">
                 <Link
-                  href="/cv/Ogwang_Gift_Gideon_CV.pdf"
+                  href="/cv/gideon-ddumba-cv.pdf"
                   download
+                  data-cursor="cta"
                   className="label inline-flex items-center justify-center border border-[var(--color-green)] px-[var(--space-5)] py-[var(--space-3)] text-[var(--color-green)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-green-light)]"
                 >
                   Download CV
@@ -42,14 +47,20 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
+      </SectionReveal>
 
-      <section className="w-full">
+      <SectionReveal as="section" className="w-full">
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-6)] px-[var(--space-5)] py-[var(--space-8)]">
-          <h2 className="text-[length:var(--text-headline-md)] leading-[1.25]">
+          <h2
+            data-reveal-child
+            className="text-[length:var(--text-headline-md)] leading-[1.25]"
+          >
             Stack
           </h2>
-          <div className="grid grid-cols-1 gap-[var(--space-5)] md:grid-cols-2 lg:grid-cols-4">
+          <div
+            data-reveal-child
+            className="grid grid-cols-1 gap-[var(--space-5)] md:grid-cols-2 lg:grid-cols-4"
+          >
             {stackGroups.map((group) => (
               <article
                 key={group.title}
@@ -69,7 +80,7 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </SectionReveal>
     </main>
   );
 }

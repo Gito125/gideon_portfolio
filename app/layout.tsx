@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
+import type { ReactNode } from "react";
+
+import { AppShell } from "@/components/shared/AppShell";
+
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -36,7 +40,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html
@@ -44,7 +48,7 @@ export default function RootLayout({
       className={`${newsreader.variable} ${inter.variable} ${jetBrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

@@ -8,6 +8,9 @@
   --color-text-secondary: #666666;
   --color-border: #bcbcb4;
   --color-preloader-bg: #080808;
+  --color-preloader-text: #ffffff;
+  --color-preloader-muted: rgba(255, 255, 255, 0.6);
+  --color-surface-hover: #eeede8;
 
   /* Accent system */
   --color-amber: #ef9f27;
@@ -163,7 +166,23 @@ button {
   padding: var(--space-1) var(--space-2);
 }
 
+.cursor-ring {
+  border-radius: 50%;
+}
+
 .surface-hairline {
   border: 1px solid var(--color-border);
   background: var(--color-surface);
+}
+
+@media (min-width: 768px) {
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    cursor: none;
+  }
 }
