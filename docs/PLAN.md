@@ -45,12 +45,12 @@ Hero section uses `section`, `h1`, `p`, and CTA `button`/`Link` elements.
 ---
 
 ## PHASE 3: Animation Layer
-- [ ] Add Preloader sequence (FR-PL-01 → FR-PL-15) with scroll lock.
-- [ ] Add Custom Cursor interactions (FR-CUR-01 → FR-CUR-07).
-- [ ] Add Hero scroll-pinned timeline (FR-HERO-01 → FR-HERO-06).
-- [ ] Add Project card hover trace (DrawSVG) and image grayscale transitions.
-- [ ] Add SectionReveal patterns for section headers and cards.
-- [ ] Add Framer Motion page transitions (FR-TRANS-01 → FR-TRANS-04).
+- [x] Add Preloader sequence (FR-PL-01 → FR-PL-15) with scroll lock.
+- [x] Add Custom Cursor interactions (FR-CUR-01 → FR-CUR-07).
+- [x] Add Hero scroll-pinned timeline (FR-HERO-01 → FR-HERO-06).
+- [x] Add Project card hover trace (DrawSVG) and image grayscale transitions.
+- [x] Add SectionReveal patterns for section headers and cards.
+- [x] Add Framer Motion page transitions (FR-TRANS-01 → FR-TRANS-04).
 
 **GUIDELINES ---**
 Use `useGSAP` for GSAP. Respect `prefers-reduced-motion` in every animation.
