@@ -285,27 +285,27 @@ export function CustomCursor({ ready }: CustomCursorProps) {
     <div
       ref={rootRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[95] opacity-0"
+      className="pointer-events-none fixed inset-0 z-95 opacity-0"
       style={{ visibility: isDesktop ? "visible" : "hidden" }}
     >
       <div
         ref={ringRef}
-        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 border border-[var(--color-amber)]"
+        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 border border-var(--color-amber)"
       >
         <span
           ref={labelRef}
-          className="label absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] text-[var(--color-green)] opacity-0"
+          className="label absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-10px text-var(--color-green) opacity-0"
         >
           {label ?? ""}
         </span>
       </div>
       <div
         ref={dotRef}
-        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 bg-[var(--color-amber)]"
+        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 bg-var(--color-amber)"
       />
       <div
         ref={burstRef}
-        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 border border-[var(--color-amber)] opacity-0"
+        className="cursor-ring absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 border border-var(--color-amber) opacity-0"
       />
     </div>
   );

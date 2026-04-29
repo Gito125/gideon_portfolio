@@ -29,16 +29,21 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
   const completedRef = useRef(false);
 
   const [counterValue, setCounterValue] = useState("00");
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
-  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
+
+  // These start as `false` so the server HTML matches the initial client
+  // render. They are updated inside a useEffect (client-only) so they never
+  // cause a hydration mismatch.
+  const [isMobile, setIsMobile] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  // `mounted` gates any JSX values that differ between server and client.
+  const [mounted, setMounted] = useState(false);
+
   const [shouldRender, setShouldRender] = useState(true);
   const [startSequence, setStartSequence] = useState(false);
 
   const complete = useCallback(() => {
-    if (completedRef.current) {
-      return;
-    }
-
+    if (completedRef.current) return;
     completedRef.current = true;
     sessionStorage.setItem(SESSION_KEY, "1");
     onPhaseChange("COMPLETE");
@@ -47,6 +52,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
   }, [onComplete, onPhaseChange]);
 
   useEffect(() => {
+    setMounted(true);
+
     const mobileQuery = window.matchMedia("(max-width: 767px)");
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -58,21 +65,16 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     syncMedia();
 
     const seen = sessionStorage.getItem(SESSION_KEY) === "1";
-
     let hideTimer: number | null = null;
     let startTimer: number | null = null;
 
     if (seen) {
       onPhaseChange("COMPLETE");
       onComplete();
-      hideTimer = window.setTimeout(() => {
-        setShouldRender(false);
-      }, 0);
+      hideTimer = window.setTimeout(() => setShouldRender(false), 0);
     } else {
       onPhaseChange("COUNTING");
-      startTimer = window.setTimeout(() => {
-        setStartSequence(true);
-      }, 0);
+      startTimer = window.setTimeout(() => setStartSequence(true), 0);
     }
 
     mobileQuery.addEventListener("change", syncMedia);
@@ -91,19 +93,14 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
     if (reduceMotion) {
       onPhaseChange("LOCKING");
-      const timer = window.setTimeout(() => {
-        complete();
-      }, 180);
+      const timer = window.setTimeout(() => complete(), 180);
       return () => window.clearTimeout(timer);
     }
 
-    const hardTimeout = window.setTimeout(() => {
-      complete();
-    }, 3000);
+    const hardTimeout = window.setTimeout(() => complete(), 3000);
 
     const scrambleInterval = window.setInterval(() => {
-      const next = String(Math.floor(Math.random() * 100)).padStart(2, "0");
-      setCounterValue(next);
+      setCounterValue(String(Math.floor(Math.random() * 100)).padStart(2, "0"));
     }, 40);
 
     const lockTimeout = window.setTimeout(() => {
@@ -121,7 +118,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
   useGSAP(
     () => {
-      if (!startSequence || !shouldRender || reduceMotion || isMobile === null) return;
+      if (!startSequence || !shouldRender || reduceMotion) return;
 
       const root = rootRef.current;
       const counter = counterRef.current;
@@ -133,14 +130,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       const bottomPanel = bottomPanelRef.current;
 
       if (
-        !root ||
-        !counter ||
-        !underline ||
-        !name ||
-        !tagline ||
-        !crackPath ||
-        !topPanel ||
-        !bottomPanel
+        !root || !counter || !underline || !name ||
+        !tagline || !crackPath || !topPanel || !bottomPanel
       ) {
         return;
       }
@@ -149,89 +140,37 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       const nameSplit = splitTextFallback(name, "chars");
       const taglineSplit = splitTextFallback(tagline, "words");
 
-      gsap.set([nameSplit.elements, taglineSplit.elements], {
-        autoAlpha: 0,
-        y: 24,
-      });
-      gsap.set(underline, {
-        scaleX: 0,
-        transformOrigin: "left center",
-      });
+      gsap.set([nameSplit.elements, taglineSplit.elements], { autoAlpha: 0, y: 24 });
+      gsap.set(underline, { scaleX: 0, transformOrigin: "left center" });
 
       const timeline = gsap.timeline({
         defaults: { ease: "var(--ease-out-smooth)" },
-        onComplete: () => {
-          complete();
-        },
+        onComplete: () => complete(),
       });
 
       timeline
-        .fromTo(
-          counter,
-          { scale: 1.2 },
-          { scale: 1, duration: 0.24, ease: "var(--ease-back)" },
-          0.9,
-        )
+        .fromTo(counter, { scale: 1.2 }, { scale: 1, duration: 0.24, ease: "var(--ease-back)" }, 0.9)
         .fromTo(underline, { scaleX: 0 }, { scaleX: 1, duration: 0.24 }, 0.9)
-        .from(nameSplit.elements, {
-          autoAlpha: 0,
-          y: 28,
-          stagger: 0.028,
-          duration: 0.42,
-        }, 0.15)
-        .from(taglineSplit.elements, {
-          autoAlpha: 0,
-          y: 16,
-          stagger: 0.06,
-          duration: 0.32,
-        }, 0.9)
-        .call(
-          () => {
-            onPhaseChange("CRACKING");
-          },
-          undefined,
-          1.14,
-        );
+        .from(nameSplit.elements, { autoAlpha: 0, y: 28, stagger: 0.028, duration: 0.42 }, 0.15)
+        .from(taglineSplit.elements, { autoAlpha: 0, y: 16, stagger: 0.06, duration: 0.32 }, 0.9)
+        .call(() => onPhaseChange("CRACKING"), undefined, 1.14);
 
-      drawLineFallback({
-        gsap,
-        path: crackPath,
-        duration: 0.24,
-        ease: "power2.out",
-        timeline,
-        position: 1.15,
-      });
+      drawLineFallback({ gsap, path: crackPath, duration: 0.24, ease: "power2.out", timeline, position: 1.15 });
 
       timeline
-        .call(
-          () => {
-            onPhaseChange("REVEALING");
-          },
-          undefined,
-          1.32,
-        )
+        .call(() => onPhaseChange("REVEALING"), undefined, 1.32)
         .to(
           topPanel,
           isMobile
             ? { yPercent: -104, duration: 0.44, ease: "var(--ease-in-out-expo)" }
-            : {
-                xPercent: 104,
-                yPercent: -104,
-                duration: 0.44,
-                ease: "var(--ease-in-out-expo)",
-              },
+            : { xPercent: 104, yPercent: -104, duration: 0.44, ease: "var(--ease-in-out-expo)" },
           1.34,
         )
         .to(
           bottomPanel,
           isMobile
             ? { yPercent: 104, duration: 0.44, ease: "var(--ease-in-out-expo)" }
-            : {
-                xPercent: -104,
-                yPercent: 104,
-                duration: 0.44,
-                ease: "var(--ease-in-out-expo)",
-              },
+            : { xPercent: -104, yPercent: 104, duration: 0.44, ease: "var(--ease-in-out-expo)" },
           1.34,
         )
         .to(root, { autoAlpha: 0, duration: 0.15 }, 1.66);
@@ -247,25 +186,27 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     },
   );
 
-  if (!shouldRender || isMobile === null || reduceMotion === null) return null;
+  if (!shouldRender) return null;
 
-  /* Clip paths for the crack panels */
-  const topPanelClipPath = isMobile
+  // Clip paths are only updated post-mount. suppressHydrationWarning lets
+  // React silently patch the style prop without throwing.
+  // Both server default (isMobile=false) and post-mount desktop values are
+  // identical, so there is zero visual change on desktop. On mobile the patch
+  // happens before the GSAP sequence starts (it waits for startSequence).
+  const topClip = mounted && isMobile
     ? "polygon(0 0, 100% 0, 100% 50%, 0 50%)"
     : "polygon(0 0, 100% 0, 100% 100%, 0 30%)";
-  const bottomPanelClipPath = isMobile
+
+  const bottomClip = mounted && isMobile
     ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
     : "polygon(0 30%, 100% 100%, 0 100%)";
 
-  const displayCounterValue = reduceMotion && startSequence ? "100" : counterValue;
+  // SVG `d` attribute — suppressHydrationWarning on the path element handles
+  // the server/client diff. On mobile the path is patched before the timeline
+  // starts because startSequence is gated behind a setTimeout.
+  const crackD = mounted && isMobile ? "M0 50 L100 50" : "M0 100 L100 0";
 
-  /* ─── Layout ────────────────────────────────────────────────────────────
-   *  Desktop (per design spec):
-   *    • Name + tagline: absolute, vertically centred, left edge (64px margin)
-   *    • Counter + underline: absolute, bottom-left (64px from edges)
-   *  Mobile:
-   *    • Simple flex-column layout at bottom of screen
-   * ──────────────────────────────────────────────────────────────────── */
+  const displayCounterValue = reduceMotion && startSequence ? "100" : counterValue;
 
   return (
     <div
@@ -273,69 +214,61 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       className="fixed inset-0 z-[100] overflow-hidden bg-[var(--color-preloader-bg)] text-white"
       aria-hidden={phase === "COMPLETE"}
     >
-      {/* Split panels that slide off on reveal */}
+      {/* ── Split panels ─────────────────────────────────────────── */}
       <div
         ref={topPanelRef}
+        suppressHydrationWarning
         className="absolute inset-0 bg-[var(--color-preloader-bg)]"
-        style={{ clipPath: topPanelClipPath }}
+        style={{ clipPath: topClip }}
       />
       <div
         ref={bottomPanelRef}
+        suppressHydrationWarning
         className="absolute inset-0 bg-[var(--color-preloader-bg)]"
-        style={{ clipPath: bottomPanelClipPath }}
+        style={{ clipPath: bottomClip }}
       />
 
-      {/* ── Desktop: Name vertically centred on the left ── */}
-      <div
-        className={`
-          absolute z-[2]
-          hidden md:flex flex-col gap-[var(--space-3)]
-          left-[clamp(40px,4.5vw,80px)]
-          top-1/2 -translate-y-1/2
-        `}
-      >
-        <h1
-          ref={nameRef}
-          className="font-[var(--font-display-family)] text-[clamp(44px,6vw,var(--text-display))] font-[200] leading-[1.05] tracking-[-0.02em] text-white"
-        >
-          Ogwang Gift Gideon
-        </h1>
-        <p
-          ref={taglineRef}
-          className="text-[length:var(--text-body-md)] text-[var(--color-preloader-muted)]"
-        >
-          I build things that matter.
-        </p>
-      </div>
+      {/* ── Content layer — single DOM structure, CSS-responsive ─── */}
+      {/*
+        One set of refs. CSS handles desktop vs mobile positioning.
 
-      {/* ── Desktop: Counter bottom-left ── */}
-      <div
-        className={`
-          absolute z-[2]
-          hidden md:flex flex-col gap-[var(--space-2)]
-          left-[clamp(40px,4.5vw,80px)]
-          bottom-[clamp(40px,4.5vw,80px)]
-        `}
-      >
-        <span
-          ref={counterRef}
-          className="font-[var(--font-mono-family)] text-[clamp(48px,5.5vw,64px)] font-[700] leading-none tabular-nums text-[var(--color-amber)]"
-        >
-          {displayCounterValue}
-        </span>
-        <span
-          ref={underlineRef}
-          className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
-        />
-      </div>
+        Desktop (md+):
+          • Name/tagline: absolute, vertically centred, left edge
+          • Counter:      absolute, bottom-left
 
-      {/* ── Mobile: stacked layout ── */}
-      <div className="relative z-[2] flex h-full w-full flex-col justify-between px-[var(--space-5)] py-[var(--space-6)] md:hidden">
-        <div className="flex-1" />
-        <div className="flex flex-col gap-[var(--space-3)]">
+        Mobile (< md):
+          • Name/tagline: absolute, above counter
+          • Counter:      absolute, bottom-left (smaller type)
+
+        Using absolute positioning for both breakpoints means the server
+        renders a single consistent tree regardless of viewport.
+      */}
+      <div className="relative z-[2] h-full w-full">
+
+        {/* Name + tagline */}
+        <div
+          className="
+            absolute left-[var(--space-5)] right-[var(--space-5)]
+            bottom-[calc(var(--space-6)+clamp(44px,8vw,64px)+20px)]
+            flex flex-col gap-[var(--space-3)]
+            md:bottom-auto
+            md:left-[clamp(40px,4.5vw,80px)]
+            md:right-auto
+            md:top-1/2
+            md:-translate-y-1/2
+            md:max-w-[640px]
+          "
+        >
           <h1
             ref={nameRef}
-            className="font-[var(--font-display-family)] text-[clamp(36px,9vw,52px)] font-[200] leading-[1.05] text-white"
+            className="
+              font-[var(--font-display-family)]
+              text-[clamp(36px,6vw,var(--text-display))]
+              font-[200]
+              leading-[1.05]
+              tracking-[-0.02em]
+              text-white
+            "
           >
             Ogwang Gift Gideon
           </h1>
@@ -346,21 +279,39 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
             I build things that matter.
           </p>
         </div>
-        <div className="mt-[var(--space-6)] flex flex-col gap-[var(--space-2)]">
+
+        {/* Counter + underline */}
+        <div
+          className="
+            absolute
+            bottom-[var(--space-6)]
+            left-[var(--space-5)]
+            flex flex-col gap-[var(--space-2)]
+            md:left-[clamp(40px,4.5vw,80px)]
+            md:bottom-[clamp(40px,4.5vw,80px)]
+          "
+        >
           <span
             ref={counterRef}
-            className="font-[var(--font-mono-family)] text-[clamp(40px,10vw,56px)] font-[700] leading-none tabular-nums text-[var(--color-amber)]"
+            className="
+              font-[var(--font-mono-family)]
+              text-[clamp(40px,5.5vw,64px)]
+              font-[700]
+              leading-none
+              tabular-nums
+              text-[var(--color-amber)]
+            "
           >
             {displayCounterValue}
           </span>
           <span
             ref={underlineRef}
-            className="block h-[2px] w-[160px] max-w-full bg-[var(--color-amber)]"
+            className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
           />
         </div>
       </div>
 
-      {/* Crack / split line SVG */}
+      {/* ── Crack line SVG ─────────────────────────────────────────── */}
       <svg
         className="pointer-events-none absolute inset-0 z-[3] h-full w-full"
         viewBox="0 0 100 100"
@@ -369,7 +320,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       >
         <path
           ref={crackPathRef}
-          d={isMobile ? "M0 50 L100 50" : "M0 100 L100 0"}
+          suppressHydrationWarning
+          d={crackD}
           stroke="var(--color-amber)"
           strokeWidth="0.35"
           fill="none"
@@ -378,4 +330,4 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       </svg>
     </div>
   );
-}
+} 
