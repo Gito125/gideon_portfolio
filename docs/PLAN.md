@@ -1,7 +1,16 @@
 # Gideon Portfolio — Comprehensive Build Plan
-**Status:** Phase 1 Foundation Complete — Phase 2 Complete (Static) — Phase 3 Pending
+**Status:** Phase 1 Foundation Complete — Phase 2 Static Complete — Phase 3 Mostly Implemented — Phase 4 Polish In Progress — Phase 5 Deployment Pending
+
+**Last Reviewed:** 2026-05-04
 
 Below is the structured, checkable plan covering all core features from start to finish. Mark items as `[x]` as they are completed.
+
+**Current study notes (2026-05-04):**
+- `pnpm type-check` passes.
+- `pnpm build` passes when network access is available for `next/font/google`.
+- `pnpm lint` currently fails on `react-hooks/set-state-in-effect` in `Preloader.tsx`, `CustomCursor.tsx`, and `Navbar.tsx`.
+- Background grid/ghost text, route metadata, OG image, favicons, and public project/portrait assets are now implemented.
+- Remaining SRS gaps: hero Acadex mockup/green trace + exact stats, contact backend/success-error states, strict full-screen mobile nav if required, final CV PDF verification.
 
 ---
 
@@ -47,7 +56,8 @@ Hero section uses `section`, `h1`, `p`, and CTA `button`/`Link` elements.
 ## PHASE 3: Animation Layer
 - [x] Add Preloader sequence (FR-PL-01 → FR-PL-15) with scroll lock.
 - [x] Add Custom Cursor interactions (FR-CUR-01 → FR-CUR-07).
-- [x] Add Hero scroll-pinned timeline (FR-HERO-01 → FR-HERO-06).
+- [x] Add base Hero scroll-pinned timeline with desktop pin, portrait, text, stats, CTAs, and mobile fallback.
+- [ ] Align Hero sequence with full FR-HERO-01 → FR-HERO-06 SRS: Acadex mockup/green trace segment and exact FR-HERO-04 stat copy.
 - [x] Add Project card hover trace (DrawSVG) and image grayscale transitions.
 - [x] Add SectionReveal patterns for section headers and cards.
 - [x] Add Framer Motion page transitions (FR-TRANS-01 → FR-TRANS-04).
@@ -63,11 +73,17 @@ Use `useGSAP` for GSAP. Respect `prefers-reduced-motion` in every animation.
 ---
 
 ## PHASE 4: Polish
-- [ ] Performance optimization (lazy-load images, avoid layout thrash, use transforms).
-- [ ] Accessibility pass (focus styles, semantic tags, ARIA where needed).
+- [x] Add config-driven background polish: global grid lines and per-page ghost text.
+- [x] Add SEO polish: route metadata, canonical URLs, OG/Twitter image config, favicons.
+- [x] Code-level performance pass: `next/image`, transform-based GSAP motion, `will-change` on animated elements.
+- [x] Baseline accessibility pass: skip link, visible focus styles, reduced-motion paths.
 - [ ] Mobile responsiveness pass for all breakpoints (360, 768, 1024, 1440).
-- [ ] Verify cursor hidden on mobile and hero pin disabled on mobile.
-- [ ] Verify no box-shadows, no border-radius except cursor ring.
+- [x] Verify in code that cursor is hidden on mobile and hero pin is disabled on mobile.
+- [x] Verify in code that no box-shadows are used and global border-radius is forced to 0 except cursor ring.
+- [ ] Resolve semantic main-landmark nesting between `AppShell` and page components.
+- [ ] Replace remaining hard-coded numeric z-index utilities with semantic z-index tokens.
+- [ ] Replace/verify final CV PDF.
+- [ ] Run Lighthouse performance/accessibility/mobile checks.
 
 **GUIDELINES ---**
 Quality gate includes Lighthouse targets and animation performance at 60fps.
@@ -83,7 +99,7 @@ Verify inputs use bottom border only and focus states are visible.
 - [ ] Connect project to Vercel and enable auto-deploy on `main`.
 - [ ] Configure environment variables (`RESEND_API_KEY`, `NEXT_PUBLIC_SITE_URL`).
 - [ ] Add analytics (Vercel Analytics or equivalent).
-- [ ] Verify `pnpm build` is clean before deployment.
+- [x] Verify `pnpm build` is clean before deployment. PASS on 2026-05-04 with network access for Google Fonts.
 
 **GUIDELINES ---**
 Production build must be green; no missing env vars or build warnings.
@@ -98,8 +114,10 @@ Vercel project configured with environment variables in the dashboard.
 ## CORE FEATURE: Infrastructure & Foundation Setup
 - [x] Install required packages (`gsap`, `@gsap/react`, `lenis`, `framer-motion`, `lucide-react`).
 - [x] Create and populate `app/globals.css` with exact design tokens from `DESIGN.md`.
-- [x] Set up `lib/gsap.ts` to register currently available plugins (`ScrollTrigger`, `@gsap/react`) and defer Club plugins.
+- [x] Set up `lib/gsap.ts` to register GSAP plugins (`ScrollTrigger`, `DrawSVGPlugin`, `SplitText`) once.
 - [x] Set up `lib/lenis.ts` for smooth scrolling and sync with GSAP ticker.
+- [x] Add shared animation types and GSAP fallback helpers in `lib/animation/`.
+- [x] Add background control panel in `config/background.config.ts`.
 
 **GUIDELINES ---**
 Strictly adhere to PNPM. Do not use npm or yarn. Ensure all base design tokens (colors, fonts, spacings, easing) are hard-mapped to CSS variables.
@@ -112,9 +130,11 @@ Strictly adhere to PNPM. Do not use npm or yarn. Ensure all base design tokens (
 ---
 
 ## CORE FEATURE: App Shell & Page Transitions
-- [ ] Wrap `app/layout.tsx` with Framer Motion's `AnimatePresence`.
-- [ ] Create `components/shared/PageTransition.tsx` for amber/green sweeping page exits/enters.
-- [ ] Integrate Lenis smooth scroll globally inside the layout.
+- [x] Wrap route content with Framer Motion `AnimatePresence` through `components/shared/PageTransition.tsx`.
+- [x] Create `components/shared/PageTransition.tsx` for amber/green sweeping page exits/enters.
+- [x] Integrate Lenis smooth scroll globally inside `components/shared/AppShell.tsx`.
+- [x] Mount global `BackgroundCanvas`, preloader, nav, cursor, and page transitions.
+- [ ] Resolve duplicate `<main>` landmarks caused by `AppShell` plus page-level `<main>` elements.
 
 **GUIDELINES ---**
 Every route change needs to trigger a smooth 400ms transition. Scroll position must reset to the top on page transition.
@@ -131,12 +151,15 @@ Every route change needs to trigger a smooth 400ms transition. Scroll position m
 ---
 
 ## CORE FEATURE: Preloader (FR-PL-01 → FR-PL-15)
-- [ ] Lock scroll during preloader execution.
-- [ ] Implement scrambling counter locking to "100" at 900ms.
-- [ ] Animate "Ogwang Gift Gideon" with GSAP SplitText (stagger 28ms).
-- [ ] Draw diagonal amber SVG crack line from bottom-left to top-right.
-- [ ] Slide panels apart and reveal the hero.
-- [ ] Build repeat-visit skip mechanism via `sessionStorage`.
+- [x] Lock scroll during preloader execution.
+- [x] Implement scrambling counter locking to "100" at 900ms.
+- [x] Animate "Ogwang Gift Gideon" with GSAP SplitText (stagger 28ms).
+- [x] Draw diagonal amber SVG crack line from bottom-left to top-right.
+- [x] Replace crack with horizontal split on mobile.
+- [x] Slide panels apart and reveal the hero.
+- [x] Build repeat-visit skip mechanism via `sessionStorage`.
+- [x] Add 3-second hard timeout and reduced-motion fade path.
+- [ ] Refactor synchronous mount/media state updates to satisfy React hook lint.
 
 **GUIDELINES ---**
 The preloader is the cinematic first impression. Total duration is 1.8s on desktop.
@@ -149,11 +172,12 @@ GSAP timeline sequencing the scrambling counter, followed by SplitText, ending w
 ---
 
 ## CORE FEATURE: Custom Cursor (FR-CUR-01 → FR-CUR-07)
-- [ ] Build base state: amber filled dot (8px) + ghost ring (32px, 80ms lag).
-- [ ] Implement "VIEW" text expansion state for project cards.
-- [ ] Implement electric green morph/rotation state for CTA buttons.
-- [ ] Implement click ripple burst.
-- [ ] Hide custom cursor on mobile viewports (< 768px).
+- [x] Build base state: amber filled dot (8px) + ghost ring (32px, 80ms lag).
+- [x] Implement "VIEW" text expansion state for project cards.
+- [x] Implement electric green morph/rotation state for CTA buttons.
+- [x] Implement click ripple burst.
+- [x] Hide custom cursor on mobile viewports (< 768px).
+- [ ] Refactor media-query initialization to satisfy React hook lint.
 
 **GUIDELINES ---**
 Must use `pointer-events: none` and not interfere with native interactions.
@@ -166,11 +190,13 @@ Adding a contextual class or Zustand/Context state like `{ cursorState: "view" }
 ---
 
 ## CORE FEATURE: Global Navigation (FR-NAV-01 → FR-NAV-06)
-- [ ] Build global Navbar component.
-- [ ] Delay Navbar entrance until Preloader reaches COMPLETE state.
-- [ ] Implement backdrop blur on scroll.
-- [ ] Create CV download button as a secondary action (Green outline).
-- [ ] Build mobile full-screen hamburger menu overlay.
+- [x] Build global Navbar component.
+- [x] Delay Navbar entrance until Preloader reaches COMPLETE state.
+- [x] Implement backdrop blur on scroll.
+- [x] Create CV download button as a secondary action (Green outline).
+- [x] Build mobile hamburger overlay/bottom-sheet menu.
+- [ ] Decide whether to accept bottom-sheet mobile menu or revise to strict full-screen overlay for FR-NAV-05.
+- [ ] Refactor route-change menu close to satisfy React hook lint.
 
 **GUIDELINES ---**
 Links are Work, About, Contact. Visual bottom border for active links. Nav must remain visible/sticky.
@@ -183,11 +209,13 @@ CV Button: `<a href="/cv/gideon-ddumba-cv.pdf" download className="border border
 ---
 
 ## CORE FEATURE: Hero Scroll Sequence (FR-HERO-01 → FR-HERO-06)
-- [ ] Pin the hero section using ScrollTrigger.
-- [ ] Scale up the hero photo (amber-toned) from 0-20% scrub.
-- [ ] Rise text word-by-word with SplitText from 20-45% scrub.
+- [x] Pin the hero section using ScrollTrigger on desktop.
+- [x] Scale up the hero photo (amber-toned) from 0-20% scrub.
+- [x] Animate identity text, role, underline, stat chips, and CTAs in a scrubbed sequence.
+- [x] Disable the scroll pin on mobile and reduced-motion contexts.
+- [ ] Rise text word-by-word with SplitText from 20-45% scrub, if strict SRS fidelity is required.
 - [ ] Slide in Acadex mockup with green trace from 45-70% scrub.
-- [ ] Animate stat chips and CTAs from 70-100% scrub.
+- [ ] Match exact FR-HERO-04 stat content: "1 Live Product · 2 Universities · Uganda → World".
 
 **GUIDELINES ---**
 Linear scrub tied to scroll progress. Disable the scroll pin on mobile.
@@ -200,11 +228,11 @@ Linear scrub tied to scroll progress. Disable the scroll pin on mobile.
 ---
 
 ## CORE FEATURE: Projects Display (FR-PROJ-01 → FR-PROJ-06)
-- [ ] Define `data/projects.ts` data layer (Acadex is #1).
-- [ ] Implement `ProjectCard` with grayscale-to-color transition.
-- [ ] Build GSAP DrawSVG hover trace (Green border) on the card.
-- [ ] Build `ProjectGrid` with `SectionReveal` wrapper hook.
-- [ ] Create `/projects/page.tsx`.
+- [x] Define `data/projects.ts` data layer (Acadex is #1).
+- [x] Implement `ProjectCard` with grayscale-to-color transition.
+- [x] Build GSAP-powered SVG hover trace (Green border) on the card.
+- [x] Build `ProjectGrid` with `SectionReveal` wrapper hook.
+- [x] Create `/projects/page.tsx`.
 
 **GUIDELINES ---**
 Card corners must be absolute zero (0px border-radius). Stack tags use JetBrains Mono, uppercase, letter-spacing 0.1em.
@@ -217,10 +245,13 @@ Acadex Mockup with `filter: grayscale(100%)` transitioning to `grayscale(0%)` on
 ---
 
 ## CORE FEATURE: About & Contact Pages (FR-ABOUT & FR-CON)
-- [ ] Populate `data/stack.ts`.
-- [ ] Build `/about/page.tsx` (Bio max 3 sentences, no mention of teaching).
-- [ ] Build `/contact/page.tsx` with Form layout (Name, Email, Message, Submit).
-- [ ] Style inputs with bottom border only, expanding color on focus.
+- [x] Populate `data/stack.ts`.
+- [x] Build `/about/page.tsx` (Bio max 3 sentences, no mention of teaching).
+- [x] Build `/contact/page.tsx` with Form layout (Name, Email, Message, Submit).
+- [x] Add social links: GitHub, LinkedIn, X, and email.
+- [x] Style inputs with bottom border only, expanding color on focus.
+- [ ] Implement contact form backend via Vercel function or Resend API.
+- [ ] Add contact form success/error states after submission.
 
 **GUIDELINES ---**
 About copy must exclude the teaching role completely. Forms have NO background fills.
@@ -233,8 +264,9 @@ About copy must exclude the teaching role completely. Forms have NO background f
 ---
 
 ## CORE FEATURE: Quality Gates & Verification
-- [x] Verify `pnpm type-check` reports 0 errors.
-- [x] Verify `pnpm lint` reports 0 errors.
+- [x] Verify `pnpm type-check` reports 0 errors. PASS on 2026-05-04.
+- [ ] Verify `pnpm lint` reports 0 errors. FAIL on 2026-05-04 due React hook lint issues.
+- [x] Verify `pnpm build` is clean. PASS on 2026-05-04 with network access for Google Fonts.
 - [ ] Perform Lighthouse performance/accessibility checks.
 
 **GUIDELINES ---**
