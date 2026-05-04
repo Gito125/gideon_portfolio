@@ -3,9 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { GhostText } from "@/components/background/GhostText";
-import {
-  drawLineFallback,
-} from "@/lib/animation/gsap-fallbacks";
+import { drawLineFallback } from "@/lib/animation/gsap-fallbacks";
 import { PreloaderPhase } from "@/lib/animation/types";
 import { getGsap, useGSAP, SplitText } from "@/lib/gsap";
 
@@ -18,18 +16,19 @@ interface PreloaderProps {
 const SESSION_KEY = "gideon:preloaderSeen";
 
 export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) {
-  const rootRef        = useRef<HTMLDivElement>(null);
-  const counterRef     = useRef<HTMLSpanElement>(null);
-  const underlineRef   = useRef<HTMLSpanElement>(null);
-  const nameRef        = useRef<HTMLHeadingElement>(null);
-  const taglineRef     = useRef<HTMLParagraphElement>(null);
-  const crackPathRef   = useRef<SVGPathElement>(null);
-  const topPanelRef    = useRef<HTMLDivElement>(null);
-  const bottomPanelRef = useRef<HTMLDivElement>(null);
-  const completedRef   = useRef(false);
+  const rootRef         = useRef<HTMLDivElement>(null);
+  const counterRef      = useRef<HTMLSpanElement>(null);
+  const underlineRef    = useRef<HTMLSpanElement>(null);
+  const nameRef         = useRef<HTMLHeadingElement>(null);
+  const taglineRef      = useRef<HTMLParagraphElement>(null);
+  const crackPathRef    = useRef<SVGPathElement>(null);
+  const topPanelRef     = useRef<HTMLDivElement>(null);
+  const bottomPanelRef  = useRef<HTMLDivElement>(null);
+  const progressBarRef  = useRef<HTMLSpanElement>(null);
+  const markerRef       = useRef<HTMLDivElement>(null);
+  const completedRef    = useRef(false);
 
-  const [counterValue, setCounterValue] = useState("00");
-
+  const [counterValue,  setCounterValue]  = useState("00");
   const [isMobile,      setIsMobile]      = useState(false);
   const [reduceMotion,  setReduceMotion]  = useState(false);
   const [mounted,       setMounted]       = useState(false);
@@ -39,13 +38,8 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
   const complete = useCallback(() => {
     if (completedRef.current) return;
     completedRef.current = true;
-
     sessionStorage.setItem(SESSION_KEY, "1");
-
-    // ── Remove the data-loading attribute added by the inline <head> script.
-    // This un-hides the body content that was concealed during JS boot.
     document.documentElement.removeAttribute("data-loading");
-
     onPhaseChange("COMPLETE");
     onComplete();
     setShouldRender(false);
@@ -54,7 +48,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
   useEffect(() => {
     setMounted(true);
 
-    const mobileQuery      = window.matchMedia("(max-width: 767px)");
+    const mobileQuery       = window.matchMedia("(max-width: 767px)");
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const syncMedia = () => {
@@ -65,11 +59,10 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     syncMedia();
 
     const seen = sessionStorage.getItem(SESSION_KEY) === "1";
-    let hideTimer: number | null  = null;
+    let hideTimer:  number | null = null;
     let startTimer: number | null = null;
 
     if (seen) {
-      // Repeat visit — skip animation, immediately reveal page
       onPhaseChange("COMPLETE");
       onComplete();
       document.documentElement.removeAttribute("data-loading");
@@ -90,6 +83,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     };
   }, [onComplete, onPhaseChange]);
 
+  // Counter scramble
   useEffect(() => {
     if (!startSequence || !shouldRender) return;
 
@@ -118,6 +112,22 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     };
   }, [complete, onPhaseChange, reduceMotion, shouldRender, startSequence]);
 
+  // Progress bar — animates from 0 → 100% over ~900ms in sync with counter
+  useEffect(() => {
+    const bar = progressBarRef.current;
+    if (!bar || !startSequence || !shouldRender || reduceMotion) return;
+
+    bar.style.width = "0%";
+    bar.style.transition = "width 0.9s linear";
+    // small rAF to ensure transition applies after paint
+    const raf = requestAnimationFrame(() => {
+      bar.style.width = "100%";
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [startSequence, shouldRender, reduceMotion]);
+
+  // GSAP animation sequence
   useGSAP(
     () => {
       if (!startSequence || !shouldRender || reduceMotion) return;
@@ -130,31 +140,33 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       const crackPath   = crackPathRef.current;
       const topPanel    = topPanelRef.current;
       const bottomPanel = bottomPanelRef.current;
+      const marker      = markerRef.current;
 
-      if (
-        !root || !counter || !underline || !name ||
-        !tagline || !crackPath || !topPanel || !bottomPanel
-      ) {
-        return;
-      }
+      if (!root || !counter || !underline || !name || !tagline || !crackPath || !topPanel || !bottomPanel) return;
 
-      const gsap        = getGsap();
-      const nameSplit   = new SplitText(name,    { type: "chars" });
+      const gsap         = getGsap();
+      const nameSplit    = new SplitText(name,    { type: "chars" });
       const taglineSplit = new SplitText(tagline, { type: "words" });
 
       gsap.set([nameSplit.elements, taglineSplit.elements], { autoAlpha: 0, y: 24 });
       gsap.set(underline, { scaleX: 0, transformOrigin: "left center" });
+      if (marker) gsap.set(marker, { autoAlpha: 0, y: -8 });
 
       const timeline = gsap.timeline({
         defaults: { ease: "var(--ease-out-smooth)" },
         onComplete: () => complete(),
       });
 
+      // Marker fades in first — sets the tone
+      if (marker) {
+        timeline.to(marker, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.1);
+      }
+
       timeline
-        .fromTo(counter, { scale: 1.2 }, { scale: 1, duration: 0.24, ease: "var(--ease-back)" }, 0.9)
+        .from(nameSplit.elements,    { autoAlpha: 0, y: 28, stagger: 0.028, duration: 0.42 }, 0.15)
+        .fromTo(counter,  { scale: 1.2 }, { scale: 1, duration: 0.24, ease: "var(--ease-back)" }, 0.9)
         .fromTo(underline, { scaleX: 0 }, { scaleX: 1, duration: 0.24 }, 0.9)
-        .from(nameSplit.elements,   { autoAlpha: 0, y: 28, stagger: 0.028, duration: 0.42 }, 0.15)
-        .from(taglineSplit.elements, { autoAlpha: 0, y: 16, stagger: 0.06,  duration: 0.32 }, 0.9)
+        .from(taglineSplit.elements, { autoAlpha: 0, y: 16, stagger: 0.06, duration: 0.32 }, 0.9)
         .call(() => onPhaseChange("CRACKING"), undefined, 1.14);
 
       drawLineFallback({ gsap, path: crackPath, duration: 0.24, ease: "power2.out", timeline, position: 1.15 });
@@ -190,30 +202,31 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
   if (!shouldRender) return null;
 
-  const topClip = mounted && isMobile
-    ? "polygon(0 0, 100% 0, 100% 50%, 0 50%)"
-    : "polygon(0 0, 100% 0, 100% 100%, 0 30%)";
-
-  const bottomClip = mounted && isMobile
-    ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
-    : "polygon(0 30%, 100% 100%, 0 100%)";
-
-  const crackD = mounted && isMobile ? "M0 50 L100 50" : "M0 100 L100 0";
+  const topClip    = mounted && isMobile ? "polygon(0 0, 100% 0, 100% 50%, 0 50%)"       : "polygon(0 0, 100% 0, 100% 100%, 0 30%)";
+  const bottomClip = mounted && isMobile ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)" : "polygon(0 30%, 100% 100%, 0 100%)";
+  const crackD     = mounted && isMobile ? "M0 50 L100 50"                                : "M0 100 L100 0";
 
   const displayCounterValue = reduceMotion && startSequence ? "100" : counterValue;
 
   return (
-    /*
-      data-preloader-root — referenced by the CSS rule in globals.css:
-        html[data-loading] body > *:not([data-preloader-root]) { visibility: hidden }
-      This ensures only the preloader itself is visible during boot.
-    */
     <div
       ref={rootRef}
       data-preloader-root
       className="fixed inset-0 z-preloader overflow-hidden bg-[var(--color-preloader-bg)] text-white"
       aria-hidden={phase === "COMPLETE"}
     >
+      {/* ── Progress bar — top edge ──────────────────────────────── */}
+      <div
+        className="absolute top-0 left-0 right-0 z-[100] h-[2px] bg-[rgba(255,255,255,0.08)]"
+        aria-hidden="true"
+      >
+        <span
+          ref={progressBarRef}
+          className="block h-full bg-[var(--color-amber)]"
+          style={{ width: "0%" }}
+        />
+      </div>
+
       {/* ── Split panels ─────────────────────────────────────────── */}
       <div
         ref={topPanelRef}
@@ -232,20 +245,74 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       <div className="relative z-overlay h-full w-full">
         <GhostText page="preloader" />
 
-        {/* Name + tagline */}
+        {/* Top-right portfolio marker */}
+        <div
+          ref={markerRef}
+          className="
+            absolute
+            top-[clamp(24px,3vw,40px)]
+            right-[clamp(20px,4.5vw,80px)]
+            flex items-center gap-[var(--space-3)]
+          "
+        >
+          <span
+            className="
+              font-[var(--font-mono-family)]
+              text-[10px]
+              uppercase
+              tracking-[0.18em]
+              text-[rgba(255,255,255,0.35)]
+            "
+          >
+            Portfolio
+          </span>
+          <span
+            className="block w-[1px] h-[12px] bg-[rgba(255,255,255,0.2)]"
+            aria-hidden="true"
+          />
+          <span
+            className="
+              font-[var(--font-mono-family)]
+              text-[10px]
+              uppercase
+              tracking-[0.18em]
+              text-[rgba(255,255,255,0.35)]
+            "
+          >
+            2026
+          </span>
+        </div>
+
+        {/* Name + tagline — vertically centred on desktop, above counter on mobile */}
         <div
           className="
             absolute left-[var(--space-5)] right-[var(--space-5)]
-            bottom-[calc(var(--space-6)+clamp(44px,8vw,64px)+20px)]
+            bottom-[calc(var(--space-6)+clamp(44px,8vw,64px)+48px)]
             flex flex-col gap-[var(--space-3)]
             md:bottom-auto
             md:left-[clamp(40px,4.5vw,80px)]
             md:right-auto
             md:top-1/2
             md:-translate-y-1/2
-            md:max-w-[640px]
+            md:max-w-[680px]
           "
         >
+          {/* Small label above name */}
+          <span
+            className="
+              flex items-center gap-[var(--space-2)]
+              font-[var(--font-mono-family)]
+              text-[10px]
+              uppercase
+              tracking-[0.2em]
+              text-[var(--color-amber)]
+              opacity-60
+            "
+          >
+            <span className="block w-[20px] h-[1px] bg-[var(--color-amber)]" aria-hidden="true" />
+            Full-Stack Developer
+          </span>
+
           <h1
             ref={nameRef}
             className="
@@ -253,21 +320,30 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
               text-[clamp(36px,6vw,var(--text-display))]
               font-[200]
               leading-[1.05]
-              tracking-[-0.02em]
+              tracking-[-0.03em]
               text-white
             "
           >
             Ogwang Gift Gideon
           </h1>
+
           <p
             ref={taglineRef}
-            className="text-[length:var(--text-body-md)] text-[var(--color-preloader-muted)]"
+            className="
+              font-[var(--font-display-family)]
+              text-[clamp(16px,1.8vw,20px)]
+              font-[300]
+              italic
+              leading-[1.5]
+              text-[rgba(255,255,255,0.45)]
+              max-w-[420px]
+            "
           >
             I build things that matter.
           </p>
         </div>
 
-        {/* Counter + underline */}
+        {/* Counter + underline — bottom-left */}
         <div
           className="
             absolute
@@ -278,6 +354,19 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
             md:bottom-[clamp(40px,4.5vw,80px)]
           "
         >
+          {/* Label above counter */}
+          <span
+            className="
+              font-[var(--font-mono-family)]
+              text-[9px]
+              uppercase
+              tracking-[0.2em]
+              text-[rgba(255,255,255,0.3)]
+            "
+          >
+            Loading
+          </span>
+
           <span
             ref={counterRef}
             className="
@@ -291,6 +380,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
           >
             {displayCounterValue}
           </span>
+
           <span
             ref={underlineRef}
             className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
