@@ -1,9 +1,28 @@
+import type { Metadata } from "next";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { GhostText } from "@/components/background/GhostText";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 import { stackGroups } from "@/data/stack";
+
+const pageTitle = "About Ogwang Gift Gideon";
+const pageDescription =
+  "Learn how Ogwang Gift Gideon builds products, systems, and interfaces with a sharp product mindset.";
+
+export const metadata: Metadata = {
+  title: pageTitle,
+  description: pageDescription,
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: pageTitle,
+    description: pageDescription,
+    url: "/about",
+  },
+};
 
 export default function AboutPage() {
   return (

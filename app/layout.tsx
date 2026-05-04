@@ -7,6 +7,12 @@ import { AppShell } from "@/components/shared/AppShell";
 
 import "./globals.css";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://iamgideon.vercel.app";
+const siteName = "Ogwang Gift Gideon";
+const siteDescription =
+  "Portfolio website for Ogwang Gift Gideon, a Uganda-based full-stack developer and product builder.";
+const ogImagePath = "/images/og-image.jpg";
+
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
@@ -30,12 +36,36 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Ogwang Gift Gideon | Full-Stack Developer & Product Builder",
-    template: "%s | Ogwang Gift Gideon",
+    default: `${siteName} | Full-Stack Developer & Product Builder`,
+    template: `%s | ${siteName}`,
   },
-  description:
-    "Portfolio website for Ogwang Gift Gideon, a Uganda-based full-stack developer and product builder.",
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName,
+    title: `${siteName} | Full-Stack Developer & Product Builder`,
+    description: siteDescription,
+    images: [
+      {
+        url: ogImagePath,
+        width: 1200,
+        height: 630,
+        alt: "Ogwang Gift Gideon portrait",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteName} | Full-Stack Developer & Product Builder`,
+    description: siteDescription,
+    images: [ogImagePath],
+  },
 };
 
 export default function RootLayout({

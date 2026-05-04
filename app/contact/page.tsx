@@ -1,5 +1,24 @@
+import type { Metadata } from "next";
+
 import { GhostText } from "@/components/background/GhostText";
 import { SectionReveal } from "@/components/shared/SectionReveal";
+
+const pageTitle = "Contact Ogwang Gift Gideon";
+const pageDescription =
+  "Start a conversation about your product, timeline, or platform goals with Ogwang Gift Gideon.";
+
+export const metadata: Metadata = {
+  title: pageTitle,
+  description: pageDescription,
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: pageTitle,
+    description: pageDescription,
+    url: "/contact",
+  },
+};
 
 export default function ContactPage() {
   return (

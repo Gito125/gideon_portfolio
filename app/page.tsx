@@ -1,6 +1,25 @@
+import type { Metadata } from "next";
+
 import { GhostText } from "@/components/background/GhostText";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
+
+const pageTitle = "Ogwang Gift Gideon | Full-Stack Developer & Product Builder";
+const pageDescription =
+  "Ogwang Gift Gideon builds sharp, scalable digital products from Uganda, led by flagship work like Acadex.";
+
+export const metadata: Metadata = {
+  title: pageTitle,
+  description: pageDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: pageTitle,
+    description: pageDescription,
+    url: "/",
+  },
+};
 
 export default function Home() {
   return (
