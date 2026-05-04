@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import type { ReactNode } from "react";
 
+import BackgroundCanvas from "@/components/background/BackgroundCanvas";
 import { AppShell } from "@/components/shared/AppShell";
 
 import "./globals.css";
@@ -55,6 +56,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-background text-foreground">
+        <BackgroundCanvas />
         <AppShell>{children}</AppShell>
       </body>
     </html>

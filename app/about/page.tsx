@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { GhostText } from "@/components/background/GhostText";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 import { stackGroups } from "@/data/stack";
 
 export default function AboutPage() {
   return (
     <main className="w-full max-w-full overflow-x-hidden pt-[96px]">
+      <GhostText page="about" />
       <SectionReveal as="section" className="w-full bg-[var(--color-bg)]">
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-7)] px-[var(--space-3)] py-[var(--space-5)]">
           <div

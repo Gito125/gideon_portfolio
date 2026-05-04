@@ -11,7 +11,9 @@ let pluginsRegistered = false;
  */
 export function registerGsapPlugins(): typeof gsap {
   if (!pluginsRegistered) {
-    gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin, SplitText);
+    // Register only GSAP plugins. `useGSAP` is a React hook (from @gsap/react)
+    // and must NOT be passed to `gsap.registerPlugin`.
+    gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin, SplitText);
     pluginsRegistered = true;
   }
 
@@ -27,4 +29,6 @@ export function getGsap(): typeof gsap {
 
 export { gsap, ScrollTrigger, useGSAP, DrawSVGPlugin, SplitText };
 
+// Ensure plugins are registered when this module is imported on the client.
+// Keep the call idempotent via the `pluginsRegistered` guard above.
 registerGsapPlugins();

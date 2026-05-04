@@ -66,8 +66,8 @@ const variantStyles: Record<CursorVariant, VariantStyle> = {
   link: {
     ringSize: 24,
     dotSize: 6,
-    ringColor: "var(--color-amber)",
-    dotColor: "var(--color-amber)",
+    ringColor: "var(--color-green)",
+    dotColor: "var(--color-green)",
     ringWidth: 1,
     rotation: 0,
   },
@@ -109,6 +109,10 @@ export function CustomCursor({ ready }: CustomCursorProps) {
         return;
       }
 
+      if (!isDesktop) {
+        return;
+      }
+
       const gsap = getGsap();
       const ringX = gsap.quickTo(ring, "x", {
         duration: 0.08,
@@ -142,11 +146,12 @@ export function CustomCursor({ ready }: CustomCursorProps) {
     },
     {
       scope: rootRef,
+      dependencies: [isDesktop],
     },
   );
 
   useEffect(() => {
-    if (!ready) {
+    if (!ready || !isDesktop) {
       return;
     }
 
@@ -230,7 +235,7 @@ export function CustomCursor({ ready }: CustomCursorProps) {
         window.clearTimeout(clickTimeoutRef.current);
       }
     };
-  }, [ready]);
+  }, [ready, isDesktop]);
 
   useGSAP(
     () => {
@@ -241,6 +246,11 @@ export function CustomCursor({ ready }: CustomCursorProps) {
       const text = labelRef.current;
 
       if (!root || !ring || !dot || !text) {
+        return;
+      }
+
+      if (!isDesktop) {
+        gsap.set(root, { autoAlpha: 0, pointerEvents: "none" });
         return;
       }
 
@@ -277,7 +287,7 @@ export function CustomCursor({ ready }: CustomCursorProps) {
     },
     {
       scope: rootRef,
-      dependencies: [label, ready, variant],
+      dependencies: [label, ready, variant, isDesktop],
     },
   );
 

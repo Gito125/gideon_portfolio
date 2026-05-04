@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { GhostText } from "@/components/background/GhostText";
 import {
   drawLineFallback,
 } from "@/lib/animation/gsap-fallbacks";
@@ -229,6 +230,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
       {/* ── Content layer ────────────────────────────────────────── */}
       <div className="relative z-overlay h-full w-full">
+        <GhostText page="preloader" />
 
         {/* Name + tagline */}
         <div

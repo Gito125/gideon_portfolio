@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { getGsap, useGSAP } from "@/lib/gsap";
 
@@ -19,30 +19,44 @@ const navLinks = [
 export function Navbar({ ready }: NavbarProps) {
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuItemRefs = useRef<HTMLAnchorElement[]>([]);
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // ── Scroll detection ──────────────────────────────────────────────────────
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // ── Lock body scroll when mobile menu is open ─────────────────────────────
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  // ── Click outside to close ────────────────────────────────────────────────
+  const handleOverlayClick = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
+
+  // ── Close on route change ─────────────────────────────────────────────────
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // ── Nav entrance after preloader ──────────────────────────────────────────
   useGSAP(
     () => {
       const nav = navRef.current;
-
-      if (!nav) {
-        return;
-      }
-
+      if (!nav) return;
       const gsap = getGsap();
 
       if (ready) {
@@ -56,120 +70,292 @@ export function Navbar({ ready }: NavbarProps) {
         return;
       }
 
-      gsap.set(nav, {
-        autoAlpha: 0,
-        y: -24,
-        pointerEvents: "none",
-      });
+      gsap.set(nav, { autoAlpha: 0, y: -24, pointerEvents: "none" });
     },
-    {
-      scope: navRef,
-      dependencies: [ready],
+    { scope: navRef, dependencies: [ready] },
+  );
+
+  // ── Mobile menu open/close animation ─────────────────────────────────────
+  useGSAP(
+    () => {
+      const gsap = getGsap();
+      const overlay = overlayRef.current;
+      const menu = menuRef.current;
+      const items = menuItemRefs.current.filter(Boolean);
+
+      if (!overlay || !menu) return;
+
+      if (mobileOpen) {
+        // Overlay fades in
+        gsap.to(overlay, {
+          autoAlpha: 1,
+          duration: 0.3,
+          ease: "var(--ease-out-smooth)",
+        });
+
+        // Menu panel slides up from bottom
+        gsap.fromTo(
+          menu,
+          { y: "100%", autoAlpha: 0 },
+          {
+            y: "0%",
+            autoAlpha: 1,
+            duration: 0.45,
+            ease: "var(--ease-out-smooth)",
+          },
+        );
+
+        // Links stagger in
+        gsap.fromTo(
+          items,
+          { y: 24, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.4,
+            ease: "var(--ease-out-smooth)",
+            stagger: 0.06,
+            delay: 0.15,
+          },
+        );
+      } else {
+        // Menu slides back down
+        gsap.to(menu, {
+          y: "100%",
+          autoAlpha: 0,
+          duration: 0.35,
+          ease: "var(--ease-in-out-expo)",
+        });
+
+        // Overlay fades out
+        gsap.to(overlay, {
+          autoAlpha: 0,
+          duration: 0.3,
+          ease: "var(--ease-out-smooth)",
+          delay: 0.1,
+        });
+      }
     },
+    { dependencies: [mobileOpen] },
   );
 
   const shellClasses = useMemo(() => {
-    if (!scrolled) {
-      return "bg-[var(--color-bg)]/92";
-    }
-
+    if (!scrolled) return "bg-[var(--color-bg)]/92";
     return "bg-[var(--color-bg)]/86 backdrop-blur-[8px]";
   }, [scrolled]);
 
   return (
-    <header ref={navRef} className="fixed inset-x-0 top-0 z-nav">
-      <nav className={`border-b border-[var(--color-border)] ${shellClasses}`}>
-        <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] items-center justify-between gap-[var(--space-4)] px-[var(--space-5)] py-[var(--space-3)]">
+    <>
+      {/* ── Main nav bar ──────────────────────────────────────────────────── */}
+      <header ref={navRef} className="fixed inset-x-0 top-0 z-nav">
+        <nav
+          className={`border-b border-[var(--color-border)] transition-colors duration-300 ${shellClasses}`}
+        >
+          <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] items-center justify-between gap-[var(--space-4)] px-[var(--space-5)] py-[var(--space-3)]">
+            {/* Brand */}
+            <Link
+              href="/"
+              data-cursor="link"
+              className="font-[var(--font-display-family)] text-[20px] italic tracking-[0.02em] text-[var(--color-text-primary)] transition-colors duration-[var(--duration-base)] hover:text-[var(--color-amber)]"
+            >
+              gideon.dev
+            </Link>
+
+            {/* Desktop links */}
+            <div className="hidden items-center gap-[var(--space-5)] md:flex">
+              {navLinks.map((link) => {
+                const isActive =
+                  pathname === link.href || pathname.startsWith(link.href);
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    data-cursor="link"
+                    className={`label relative pb-[var(--space-1)] transition-colors duration-[var(--duration-base)] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:transition-transform after:duration-300 ${
+                      isActive
+                        ? "text-[var(--color-green)] after:scale-x-100 after:bg-[var(--color-green)]"
+                        : "text-[var(--color-text-secondary)] after:scale-x-0 after:bg-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] hover:after:scale-x-100"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Desktop CV */}
+            <div className="hidden md:block">
+              <Link
+                href="/cv/gideon-ddumba-cv.pdf"
+                download
+                data-cursor="cta"
+                className="label inline-flex items-center border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--color-green)] transition-all duration-[var(--duration-base)] hover:bg-[var(--color-green-light)] hover:tracking-widest"
+              >
+                CV
+              </Link>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              data-cursor="cta"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="label relative z-[9999] inline-flex h-10 w-10 flex-col items-center justify-center gap-[5px] border border-[var(--color-border)] md:hidden"
+            >
+              {/* Animated hamburger bars */}
+              <span
+                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300 origin-center"
+                style={{
+                  transform: mobileOpen
+                    ? "translateY(6px) rotate(45deg)"
+                    : "none",
+                }}
+              />
+              <span
+                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300"
+                style={{
+                  opacity: mobileOpen ? 0 : 1,
+                  transform: mobileOpen ? "scaleX(0)" : "scaleX(1)",
+                }}
+              />
+              <span
+                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300 origin-center"
+                style={{
+                  transform: mobileOpen
+                    ? "translateY(-6px) rotate(-45deg)"
+                    : "none",
+                }}
+              />
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* ── Mobile overlay backdrop ────────────────────────────────────────── */}
+      {/* Click outside = close */}
+      <div
+        ref={overlayRef}
+        onClick={handleOverlayClick}
+        aria-hidden="true"
+        className="pointer-events-auto fixed inset-0 z-[998] md:hidden"
+        style={{
+          backgroundColor: "rgba(26, 26, 26, 0.6)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+          opacity: 0,
+          visibility: "hidden",
+          pointerEvents: mobileOpen ? "auto" : "none",
+        }}
+      />
+
+      {/* ── Mobile menu panel ─────────────────────────────────────────────── */}
+      {/* Slides up from bottom — stops at ~60% of screen height */}
+      <div
+        ref={menuRef}
+        className="fixed inset-x-0 bottom-0 z-[999] md:hidden"
+        style={{
+          backgroundColor: "var(--color-bg)",
+          borderTop: "1px solid var(--color-border)",
+          opacity: 0,
+          visibility: "hidden",
+          transform: "translateY(100%)",
+        }}
+      >
+        {/* Top handle — visual cue */}
+        <div className="flex justify-center pt-[var(--space-3)]">
+          <div
+            style={{
+              width: 40,
+              height: 3,
+              backgroundColor: "var(--color-border)",
+            }}
+          />
+        </div>
+
+        <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col px-[var(--space-5)] pb-[var(--space-7)] pt-[var(--space-5)]">
+          {/* Section label */}
+          <span
+            className="label mb-[var(--space-4)]"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
+            Navigation
+          </span>
+
+          {/* Nav links */}
+          <div className="flex flex-col">
+            {navLinks.map((link, i) => {
+              const isActive =
+                pathname === link.href || pathname.startsWith(link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  data-cursor="link"
+                  ref={(el) => {
+                    if (el) menuItemRefs.current[i] = el;
+                  }}
+                  onClick={() => setMobileOpen(false)}
+                  className="group flex items-center justify-between border-b border-[var(--color-border)] py-[var(--space-4)]"
+                  style={{
+                    color: isActive
+                      ? "var(--color-green)"
+                      : "var(--color-text-primary)",
+                  }}
+                >
+                  {/* Link number + label */}
+                  <div className="flex items-baseline gap-[var(--space-3)]">
+                    <span
+                      className="font-mono text-[11px]"
+                      style={{ color: "var(--color-amber)" }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-display-family)",
+                        fontSize: 32,
+                        fontWeight: 300,
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {link.label}
+                    </span>
+                  </div>
+
+                  {/* Arrow — moves right on hover */}
+                  <span
+                    className="label transition-transform duration-300 group-hover:translate-x-1"
+                    style={{ color: "var(--color-text-secondary)" }}
+                  >
+                    →
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* CV button */}
           <Link
-            href="/"
-            data-cursor="link"
-            className="font-[var(--font-display-family)] text-[20px] italic tracking-[0.02em]"
-          >
-            gideon.dev
-          </Link>
-
-          <div className="hidden items-center gap-[var(--space-5)] md:flex">
-            {navLinks.map((link) => {
-              const isActive =
-                pathname === link.href || pathname.startsWith(link.href);
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  data-cursor="link"
-                  onClick={() => setMobileOpen(false)}
-                  className={`label border-b pb-[var(--space-1)] transition-colors duration-[var(--duration-base)] ${
-                    isActive
-                      ? "border-[var(--color-green)] text-[var(--color-green)]"
-                      : "border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="hidden md:block">
-            <Link
-              href="/cv/gideon-ddumba-cv.pdf"
-              download
-              data-cursor="cta"
-              className="label inline-flex items-center border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--color-green)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-green-light)]"
-            >
-              CV
-            </Link>
-          </div>
-
-          <button
-            type="button"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
+            href="/cv/gideon-ddumba-cv.pdf"
+            download
             data-cursor="cta"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            className="label inline-flex items-center border border-[var(--color-border)] px-[var(--space-3)] py-[var(--space-2)] text-[var(--color-text-primary)] md:hidden"
+            ref={(el) => {
+              if (el) menuItemRefs.current[navLinks.length] = el;
+            }}
+            onClick={() => setMobileOpen(false)}
+            className="label mt-[var(--space-5)] inline-flex w-fit items-center gap-[var(--space-2)] border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-3)]"
+            style={{ color: "var(--color-green)" }}
           >
-            {mobileOpen ? "Close" : "Menu"}
-          </button>
+            Download CV
+            <span>↓</span>
+          </Link>
         </div>
-      </nav>
-
-      {mobileOpen ? (
-        <div className="fixed inset-0 z-nav-mobile-menu bg-[var(--color-bg)] pt-[96px] md:hidden">
-          <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-4)] px-[var(--space-5)]">
-            {navLinks.map((link) => {
-              const isActive =
-                pathname === link.href || pathname.startsWith(link.href);
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  data-cursor="link"
-                  onClick={() => setMobileOpen(false)}
-                  className={`label border-b py-[var(--space-2)] ${
-                    isActive
-                      ? "border-[var(--color-green)] text-[var(--color-green)]"
-                      : "border-[var(--color-border)] text-[var(--color-text-primary)]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-            <Link
-              href="/cv/gideon-ddumba-cv.pdf"
-              download
-              data-cursor="cta"
-              onClick={() => setMobileOpen(false)}
-              className="label inline-flex w-fit items-center border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--color-green)]"
-            >
-              Download CV
-            </Link>
-          </div>
-        </div>
-      ) : null}
-    </header>
+      </div>
+    </>
   );
 }
