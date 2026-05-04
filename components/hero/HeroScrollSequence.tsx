@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { getGsap, useGSAP } from "@/lib/gsap";
 
@@ -24,6 +24,7 @@ export function HeroScrollSequence() {
   const statsRef       = useRef<HTMLUListElement>(null);
   const ctaWrapRef     = useRef<HTMLDivElement>(null);
   const eyebrowRef     = useRef<HTMLSpanElement>(null);
+  const [portraitLoaded, setPortraitLoaded] = useState(false);
 
   useGSAP(
     () => {
@@ -337,13 +338,36 @@ export function HeroScrollSequence() {
             />
 
             <div className="relative aspect-[3/4] w-full">
+              <div
+                aria-hidden="true"
+                className={
+                  `absolute inset-0 bg-[var(--color-preloader-bg)] transition-opacity duration-[var(--duration-base)] ` +
+                  (portraitLoaded ? "opacity-0" : "opacity-100")
+                }
+              >
+                <div className="absolute inset-0 flex flex-col justify-between p-[var(--space-4)] motion-safe:animate-pulse motion-reduce:animate-none">
+                  <div className="flex items-start justify-between gap-[var(--space-3)]">
+                    <span className="block h-[3px] w-[42px] bg-[var(--color-amber)]" />
+                    <span className="block h-px w-[24%] bg-[var(--color-border)]/30" />
+                  </div>
+                  <div className="flex flex-col gap-[var(--space-3)]">
+                    <span className="block h-[38%] w-[72%] border border-[var(--color-border)]/20 bg-[var(--color-surface)]/5" />
+                    <span className="block h-px w-[52%] bg-[var(--color-border)]/25" />
+                    <span className="block h-px w-[36%] bg-[var(--color-border)]/20" />
+                  </div>
+                </div>
+              </div>
               <Image
                 src="/images/hero-portrait-optimized.jpg"
                 alt="Portrait of Ogwang Gift Gideon"
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 32vw"
-                className="object-cover object-top [filter:sepia(0.2)_saturate(1.3)]"
+                onLoad={() => setPortraitLoaded(true)}
+                className={
+                  "object-cover object-top [filter:sepia(0.2)_saturate(1.3)] transition-opacity duration-[var(--duration-base)] " +
+                  (portraitLoaded ? "opacity-100" : "opacity-0")
+                }
               />
             </div>
 
