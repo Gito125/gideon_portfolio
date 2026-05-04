@@ -7,7 +7,7 @@ export default function ContactPage() {
         as="section"
         className="w-full border-b border-[var(--color-border)]"
       >
-        <div className="mx-auto w-full max-w-[var(--grid-max-width)] px-[var(--space-5)] py-[var(--space-8)]">
+        <div className="mx-auto w-full max-w-[var(--grid-max-width)] px-[var(--space-3)] py-[var(--space-5)]">
           <div
             data-reveal-child
             className="mx-auto flex max-w-[65ch] flex-col items-center gap-[var(--space-4)] text-center"
@@ -47,7 +47,7 @@ export default function ContactPage() {
                   placeholder="Your name"
                   required
                   autoComplete="name"
-                  className="w-full border-b border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] focus:border-[var(--color-text-primary)] focus:outline-none"
+                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none"
                 />
               </div>
 
@@ -65,7 +65,7 @@ export default function ContactPage() {
                   placeholder="you@email.com"
                   required
                   autoComplete="email"
-                  className="w-full border-b border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] focus:border-[var(--color-text-primary)] focus:outline-none"
+                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none"
                 />
               </div>
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
                   rows={6}
                   placeholder="Project summary, goals, and constraints"
                   required
-                  className="w-full border-b border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] focus:border-[var(--color-text-primary)] focus:outline-none"
+                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none resize-none"
                 />
               </div>
 

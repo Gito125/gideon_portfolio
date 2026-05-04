@@ -77,7 +77,7 @@ export function Navbar({ ready }: NavbarProps) {
   }, [scrolled]);
 
   return (
-    <header ref={navRef} className="fixed inset-x-0 top-0 z-[80]">
+    <header ref={navRef} className="fixed inset-x-0 top-0 z-nav">
       <nav className={`border-b border-[var(--color-border)] ${shellClasses}`}>
         <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] items-center justify-between gap-[var(--space-4)] px-[var(--space-5)] py-[var(--space-3)]">
           <Link
@@ -136,7 +136,7 @@ export function Navbar({ ready }: NavbarProps) {
       </nav>
 
       {mobileOpen ? (
-        <div className="fixed inset-0 z-[79] bg-[var(--color-bg)] pt-[96px] md:hidden">
+        <div className="fixed inset-0 z-nav-mobile-menu bg-[var(--color-bg)] pt-[96px] md:hidden">
           <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-4)] px-[var(--space-5)]">
             {navLinks.map((link) => {
               const isActive =

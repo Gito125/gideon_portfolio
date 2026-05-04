@@ -68,7 +68,7 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
       className="group relative flex h-full flex-col border border-[var(--color-border)] bg-[var(--color-surface)] transition-colors duration-[400ms] hover:bg-[var(--color-surface-hover)]"
     >
       <svg
-        className="pointer-events-none absolute inset-0 z-[2] h-full w-full"
+        className="pointer-events-none absolute inset-0 z-overlay h-full w-full"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -87,10 +87,10 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
         href={href}
         data-cursor="view"
         data-cursor-label="VIEW"
-        className="relative z-[3] flex h-full flex-col"
+        className="relative z-content flex h-full flex-col"
         {...(isExternal ? { rel: "noreferrer", target: "_blank" } : {})}
       >
-        <div className="relative aspect-[4/3] w-full border-b border-[var(--color-border)] overflow-hidden">
+        <div className="relative aspect-[25/13] w-full border-b border-[var(--color-border)] overflow-hidden">
           <Image
             src={project.image}
             alt={`${project.title} preview`}

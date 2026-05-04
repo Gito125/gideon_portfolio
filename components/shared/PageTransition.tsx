@@ -49,7 +49,7 @@ export function PageTransition({ children, ready }: PageTransitionProps) {
         {ready && !reduceMotion ? (
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-[90]"
+            className="pointer-events-none fixed inset-0 z-page-transition"
             style={{ backgroundColor: getTransitionColor(pathname) }}
             initial={{ x: "0%" }}
             animate={{ x: "100%" }}

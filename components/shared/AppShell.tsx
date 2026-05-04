@@ -59,9 +59,11 @@ export function AppShell({ children }: AppShellProps) {
         onPhaseChange={setPreloaderPhase}
         onComplete={handlePreloaderComplete}
       />
-      <Navbar ready={preloaderComplete} />
-      <CustomCursor ready={preloaderComplete} />
-      <PageTransition ready={preloaderComplete}>{children}</PageTransition>
+      <main id="main-content" className="w-full">
+        <Navbar ready={preloaderComplete} />
+        <CustomCursor ready={preloaderComplete} />
+        <PageTransition ready={preloaderComplete}>{children}</PageTransition>
+      </main>
     </>
   );
 }

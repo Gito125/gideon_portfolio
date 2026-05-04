@@ -8,7 +8,7 @@ export default function AboutPage() {
   return (
     <main className="w-full max-w-full overflow-x-hidden pt-[96px]">
       <SectionReveal as="section" className="w-full bg-[var(--color-bg)]">
-        <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-7)] px-[var(--space-5)] py-[var(--space-8)]">
+        <div className="mx-auto flex w-full max-w-[var(--grid-max-width)] flex-col gap-[var(--space-7)] px-[var(--space-3)] py-[var(--space-5)]">
           <div
             data-reveal-child
             className="grid w-full gap-[var(--space-6)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center"
@@ -35,9 +35,9 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <div className="relative aspect-[4/5] w-full">
+              <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Image
-                  src="/images/hero-placeholder.svg"
+                  src="/images/hero-portrait.jpg"
                   alt="Ogwang Gift Gideon portrait"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"

@@ -57,6 +57,16 @@
   --duration-cinematic: 1000ms;
   --stagger-char: 28ms;
   --stagger-word: 60ms;
+
+  /* Z-index tokens — semantic layering */
+  --z-grain: 9997;
+  --z-preloader: 100;
+  --z-page-transition: 90;
+  --z-nav: 80;
+  --z-nav-mobile-menu: 79;
+  --z-default: 1;
+  --z-overlay: 2;
+  --z-content: 3;
 }
 
 @theme inline {
@@ -82,7 +92,7 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9997;
+  z-index: var(--z-grain);
   opacity: 0.032;
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
   background-size: 200px 200px;
@@ -104,6 +114,13 @@ html {
   /* Lenis overrides this, but keeps things sane without JS */
   scroll-behavior: smooth;
 }
+  html[data-loading] body {
+    overflow: hidden;
+  }
+ 
+  html[data-loading] body > *:not([data-preloader-root]) {
+    visibility: hidden;
+  }
 
 body {
   margin: 0;
@@ -160,6 +177,24 @@ select {
 
 button {
   cursor: pointer;
+}
+
+/* Enhanced form input focus styles for accessibility */
+input,
+textarea,
+select {
+  transition: border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-green);
+}
+
+textarea {
+  resize: vertical;
+  max-height: 400px;
 }
 
 /* Green focus ring — on-brand and accessible */
@@ -230,4 +265,33 @@ button {
   [role="button"] {
     cursor: none;
   }
+}
+
+/* Z-index utility classes */
+.z-grain {
+  z-index: var(--z-grain);
+}
+
+.z-preloader {
+  z-index: var(--z-preloader);
+}
+
+.z-page-transition {
+  z-index: var(--z-page-transition);
+}
+
+.z-nav {
+  z-index: var(--z-nav);
+}
+
+.z-nav-mobile-menu {
+  z-index: var(--z-nav-mobile-menu);
+}
+
+.z-overlay {
+  z-index: var(--z-overlay);
+}
+
+.z-content {
+  z-index: var(--z-content);
 }
