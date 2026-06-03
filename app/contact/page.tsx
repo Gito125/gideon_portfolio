@@ -159,7 +159,7 @@ export default function ContactPage() {
                           fill="currentColor"
                         />
                       </svg>
-                      <span>{contactEmail}</span>
+                      <span>iamgideon125@gmail.com</span>
                     </a>
                   </li>
                 </ul>
