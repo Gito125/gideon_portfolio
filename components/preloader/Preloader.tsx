@@ -39,7 +39,6 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     if (completedRef.current) return;
     completedRef.current = true;
     sessionStorage.setItem(SESSION_KEY, "1");
-    document.documentElement.removeAttribute("data-loading");
     onPhaseChange("COMPLETE");
     onComplete();
     setShouldRender(false);
@@ -65,7 +64,6 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     if (seen) {
       onPhaseChange("COMPLETE");
       onComplete();
-      document.documentElement.removeAttribute("data-loading");
       hideTimer = window.setTimeout(() => setShouldRender(false), 0);
     } else {
       onPhaseChange("COUNTING");

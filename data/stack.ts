@@ -10,6 +10,7 @@ export const stackGroups = [
       "Next.js",
       "React",
       "TypeScript",
+      "JavaScript",
       "Tailwind CSS",
       "GSAP",
       "Framer Motion",
@@ -24,6 +25,7 @@ export const stackGroups = [
       "REST APIs",
       "Redis",
       "Supabase",
+      "Python",
     ],
   },
   {

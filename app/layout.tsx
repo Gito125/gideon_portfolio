@@ -78,13 +78,6 @@ export default function RootLayout({
       lang="en"
       className={`${newsreader.variable} ${inter.variable} ${jetBrainsMono.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(!sessionStorage.getItem('gideon:preloaderSeen')){document.documentElement.setAttribute('data-loading','');}}catch(e){}})();`,
-          }}
-        />
-      </head>
       <body className="min-h-full bg-background text-foreground">
         <BackgroundCanvas />
         <AppShell>{children}</AppShell>

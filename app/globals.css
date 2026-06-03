@@ -114,13 +114,6 @@ html {
   /* Lenis overrides this, but keeps things sane without JS */
   scroll-behavior: smooth;
 }
-  html[data-loading] body {
-    overflow: hidden;
-  }
- 
-  html[data-loading] body > *:not([data-preloader-root]) {
-    visibility: hidden;
-  }
 
 body {
   margin: 0;

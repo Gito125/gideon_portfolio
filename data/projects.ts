@@ -26,6 +26,19 @@ export const projects = [
     featured: false,
   },
   {
+    id: "restaurant-os",
+    title: "Restaurant OS",
+    category: "Restaurant Management System",
+    description:
+      "An offline-capable restaurant operating system for small and medium restaurants, covering POS, kitchen workflows, payments, inventory, expenses, reporting, receipts, staff roles, and sync recovery.",
+    year: 2026,
+    stack: ["Next.js", "React", "TypeScript", "Prisma", "PostgreSQL", "Tailwind CSS"],
+    image: "/images/projects/restaurant-os.png",
+    link: "https://restaurant-os-ug.vercel.app/",
+    github: "https://github.com/Gito125/restaurant_os",
+    featured: false,
+  },
+  {
     id: "digital-drift-blog",
     title: "Digital Drift Blog",
     category: "Tech Blog",
