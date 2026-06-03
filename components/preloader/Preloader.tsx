@@ -210,17 +210,17 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
     <div
       ref={rootRef}
       data-preloader-root
-      className="fixed inset-0 z-preloader overflow-hidden bg-[var(--color-preloader-bg)] text-white"
+      className="fixed inset-0 z-preloader overflow-hidden bg-(--color-preloader-bg) text-white"
       aria-hidden={phase === "COMPLETE"}
     >
       {/* ── Progress bar — top edge ──────────────────────────────── */}
       <div
-        className="absolute top-0 left-0 right-0 z-[100] h-[2px] bg-[rgba(255,255,255,0.08)]"
+        className="absolute top-0 left-0 right-0 z-100 h-0.5 bg-[rgba(255,255,255,0.08)]"
         aria-hidden="true"
       >
         <span
           ref={progressBarRef}
-          className="block h-full bg-[var(--color-amber)]"
+          className="block h-full bg-(--color-amber)"
           style={{ width: "0%" }}
         />
       </div>
@@ -229,13 +229,13 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
       <div
         ref={topPanelRef}
         suppressHydrationWarning
-        className="absolute inset-0 bg-[var(--color-preloader-bg)]"
+        className="absolute inset-0 bg-(--color-preloader-bg)"
         style={{ clipPath: topClip }}
       />
       <div
         ref={bottomPanelRef}
         suppressHydrationWarning
-        className="absolute inset-0 bg-[var(--color-preloader-bg)]"
+        className="absolute inset-0 bg-(--color-preloader-bg)"
         style={{ clipPath: bottomClip }}
       />
 
@@ -250,12 +250,12 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
             absolute
             top-[clamp(24px,3vw,40px)]
             right-[clamp(20px,4.5vw,80px)]
-            flex items-center gap-[var(--space-3)]
+            flex items-center gap-(--space-3)
           "
         >
           <span
             className="
-              font-[var(--font-mono-family)]
+              font-mono
               text-[10px]
               uppercase
               tracking-[0.18em]
@@ -265,12 +265,12 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
             Portfolio
           </span>
           <span
-            className="block w-[1px] h-[12px] bg-[rgba(255,255,255,0.2)]"
+            className="block w-px h-3 bg-[rgba(255,255,255,0.2)]"
             aria-hidden="true"
           />
           <span
             className="
-              font-[var(--font-mono-family)]
+              font-mono
               text-[10px]
               uppercase
               tracking-[0.18em]
@@ -284,39 +284,39 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
         {/* Name + tagline — vertically centred on desktop, above counter on mobile */}
         <div
           className="
-            absolute left-[var(--space-5)] right-[var(--space-5)]
+            absolute left-(--space-5) right-(--space-5)
             bottom-[calc(var(--space-6)+clamp(44px,8vw,64px)+48px)]
-            flex flex-col gap-[var(--space-3)]
+            flex flex-col gap-(--space-3)
             md:bottom-auto
             md:left-[clamp(40px,4.5vw,80px)]
             md:right-auto
             md:top-1/2
             md:-translate-y-1/2
-            md:max-w-[680px]
+            md:max-w-170
           "
         >
           {/* Small label above name */}
           <span
             className="
-              flex items-center gap-[var(--space-2)]
-              font-[var(--font-mono-family)]
+              flex items-center gap-(--space-2)
+              font-mono
               text-[10px]
               uppercase
               tracking-[0.2em]
-              text-[var(--color-amber)]
+              text-(--color-amber)
               opacity-60
             "
           >
-            <span className="block w-[20px] h-[1px] bg-[var(--color-amber)]" aria-hidden="true" />
+            <span className="block w-5 h-px bg-(--color-amber)" aria-hidden="true" />
             Full-Stack Developer
           </span>
 
           <h1
             ref={nameRef}
             className="
-              font-[var(--font-display-family)]
+              font-display
               text-[clamp(36px,6vw,var(--text-display))]
-              font-[200]
+              font-extralight
               leading-[1.05]
               tracking-[-0.03em]
               text-white
@@ -328,13 +328,13 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
           <p
             ref={taglineRef}
             className="
-              font-[var(--font-display-family)]
+              font-display
               text-[clamp(16px,1.8vw,20px)]
-              font-[300]
+              font-light
               italic
-              leading-[1.5]
+              leading-normal
               text-[rgba(255,255,255,0.45)]
-              max-w-[420px]
+              max-w-105
             "
           >
             I build things that matter.
@@ -345,9 +345,9 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
         <div
           className="
             absolute
-            bottom-[var(--space-6)]
-            left-[var(--space-5)]
-            flex flex-col gap-[var(--space-2)]
+            bottom-(--space-6)
+            left-(--space-5)
+            flex flex-col gap-(--space-2)
             md:left-[clamp(40px,4.5vw,80px)]
             md:bottom-[clamp(40px,4.5vw,80px)]
           "
@@ -355,7 +355,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
           {/* Label above counter */}
           <span
             className="
-              font-[var(--font-mono-family)]
+              font-mono
               text-[9px]
               uppercase
               tracking-[0.2em]
@@ -368,12 +368,12 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
           <span
             ref={counterRef}
             className="
-              font-[var(--font-mono-family)]
+              font-mono
               text-[clamp(40px,5.5vw,64px)]
-              font-[700]
+              font-bold
               leading-none
               tabular-nums
-              text-[var(--color-amber)]
+              text-(--color-amber)
             "
           >
             {displayCounterValue}
@@ -381,7 +381,7 @@ export function Preloader({ phase, onPhaseChange, onComplete }: PreloaderProps) 
 
           <span
             ref={underlineRef}
-            className="block h-[2px] w-[200px] max-w-full bg-[var(--color-amber)]"
+            className="block h-0.5 w-50 max-w-full bg-(--color-amber)"
           />
         </div>
       </div>

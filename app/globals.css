@@ -74,6 +74,7 @@
   --color-foreground: var(--color-text-primary);
   --font-sans: var(--font-body-family);
   --font-mono: var(--font-mono-family);
+  --font-display: var(--font-display-family);
 }
 
 *,

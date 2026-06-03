@@ -137,16 +137,16 @@ export function HeroScrollSequence() {
             <span
               ref={eyebrowRef}
               className="
-                flex items-center gap-[var(--space-2)]
-                font-[var(--font-mono-family)]
+                flex items-center gap-(--space-2)
+                font-mono
                 text-[11px]
                 uppercase
                 tracking-[0.18em]
-                text-[var(--color-text-secondary)]
+                text-(--color-text-secondary)
               "
             >
               <span
-                className="inline-block h-[1px] w-[32px] bg-[var(--color-amber)]"
+                className="inline-block h-px w-8 bg-(--color-amber)"
                 aria-hidden="true"
               />
               Portfolio · 2026
@@ -161,20 +161,20 @@ export function HeroScrollSequence() {
                 aria-hidden="true"
                 className="
                   block
-                  font-[var(--font-display-family)]
+                  font-display
                   text-[clamp(20px,2.6vw,32px)]
-                  font-[300]
+                  font-light
                   italic
                   leading-[1.4]
                   tracking-[-0.01em]
-                  text-[var(--color-text-secondary)]
+                  text-(--color-text-secondary)
                 "
               >
                 Ogwang
               </span>
 
               {/* Gideon + Gift */}
-              <div className="flex items-baseline gap-[var(--space-2)]">
+              <div className="flex items-baseline gap-(--space-2)">
                 <div
                   ref={gideonWrapRef}
                   className="origin-bottom-left"
@@ -183,9 +183,9 @@ export function HeroScrollSequence() {
                   <h1
                     className="
                       block
-                      font-(--font-display-family)
+                      font-display
                       text-[clamp(72px,8.5vw,var(--text-display))]
-                      leading-[1.0]
+                      leading-none
                       tracking-[-0.03em]
                       text-(--color-amber)
                     "
@@ -197,13 +197,13 @@ export function HeroScrollSequence() {
                   ref={giftRef}
                   aria-hidden="true"
                   className="
-                    font-[var(--font-display-family)]
+                    font-display
                     text-[clamp(16px,2vw,24px)]
-                    font-[300]
+                    font-light
                     italic
                     leading-[1.4]
                     tracking-[-0.01em]
-                    text-[var(--color-text-secondary)]
+                    text-(--color-text-secondary)
                     pb-[0.12em]
                   "
                 >
@@ -218,7 +218,7 @@ export function HeroScrollSequence() {
             {/* Amber underline — wider, bolder presence */}
             <span
               ref={underlineRef}
-              className="block h-[3px] w-[180px] max-w-full bg-[var(--color-amber)]"
+              className="block h-0.75 w-[180px] max-w-full bg-(--color-amber)"
               aria-hidden="true"
             />
 
@@ -226,11 +226,11 @@ export function HeroScrollSequence() {
             <p
               ref={roleRef}
               className="
-                font-[var(--font-display-family)]
-                text-[length:var(--text-headline-md)]
+                font-display
+                text-(length:--text-headline-md)
                 italic
                 leading-[1.3]
-                text-[var(--color-text-secondary)]
+                text-(--color-text-secondary)
                 max-w-[420px]
               "
             >
@@ -240,7 +240,7 @@ export function HeroScrollSequence() {
             {/* Stat chips — redesigned with value + label stacking */}
             <ul
               ref={statsRef}
-              className="flex flex-wrap gap-[var(--space-2)] pt-[var(--space-1)]"
+              className="flex flex-wrap gap-(--space-2) pt-(--space-1)"
             >
               {heroStats.map((stat) => (
                 <li
@@ -248,31 +248,31 @@ export function HeroScrollSequence() {
                   data-hero-stat
                   className="
                     flex flex-col
-                    border-l-[2px] border-l-[var(--color-amber)]
-                    border border-[var(--color-border)]
-                    px-[var(--space-3)] py-[var(--space-2)]
-                    bg-[var(--color-surface)]
+                    border-l-2 border-l-(--color-amber)
+                    border border-(--color-border)
+                    px-(--space-3) py-(--space-2)
+                    bg-(--color-surface)
                     gap-[2px]
                   "
                 >
                   <span
                     className="
-                      font-[var(--font-mono-family)]
+                      font-mono
                       text-[15px]
-                      font-[700]
+                      font-bold
                       leading-none
-                      text-[var(--color-text-primary)]
+                      text-foreground
                     "
                   >
                     {stat.value}
                   </span>
                   <span
                     className="
-                      font-[var(--font-mono-family)]
+                      font-mono
                       text-[10px]
                       uppercase
                       tracking-[0.12em]
-                      text-[var(--color-text-secondary)]
+                      text-(--color-text-secondary)
                     "
                   >
                     {stat.label}
@@ -282,19 +282,19 @@ export function HeroScrollSequence() {
             </ul>
 
             {/* CTAs */}
-            <div ref={ctaWrapRef} className="flex flex-wrap gap-[var(--space-3)] pt-[var(--space-2)]">
+            <div ref={ctaWrapRef} className="flex flex-wrap gap-(--space-3) pt-(--space-2)">
               <Link
                 href="/projects"
                 data-cursor="cta"
                 className="
                   label
-                  inline-flex items-center justify-center gap-[var(--space-2)]
+                  inline-flex items-center justify-center gap-(--space-2)
                   border border-transparent
-                  bg-[var(--color-amber)]
-                  px-[var(--space-5)] py-[var(--space-3)]
-                  text-[var(--color-text-primary)]
-                  transition-colors duration-[var(--duration-base)]
-                  hover:bg-[var(--color-amber-dark)] hover:text-[var(--color-bg)]
+                  bg-(--color-amber)
+                  px-(--space-5) py-(--space-3)
+                  text-foreground
+                  transition-colors duration-(--duration-base)
+                  hover:bg-(--color-amber-dark) hover:text-background
                 "
               >
                 See My Work
@@ -305,12 +305,12 @@ export function HeroScrollSequence() {
                 data-cursor="cta"
                 className="
                   label
-                  inline-flex items-center justify-center gap-[var(--space-2)]
-                  border border-[var(--color-green)]
-                  px-[var(--space-5)] py-[var(--space-3)]
-                  text-[var(--color-green)]
-                  transition-colors duration-[var(--duration-base)]
-                  hover:bg-[var(--color-green-light)]
+                  inline-flex items-center justify-center gap-(--space-2)
+                  border border-(--color-green)
+                  px-(--space-5) py-(--space-3)
+                  text-(--color-green)
+                  transition-colors duration-(--duration-base)
+                  hover:bg-(--color-green-light)
                 "
               >
                 Let&apos;s Talk
@@ -323,7 +323,7 @@ export function HeroScrollSequence() {
             ref={photoRef}
             className="
               relative overflow-hidden
-              border border-[var(--color-border)]
+              border border-(--color-border)
               w-full lg:w-[clamp(320px,32vw,520px)]
             "
           >
@@ -331,8 +331,8 @@ export function HeroScrollSequence() {
             <span
               className="
                 absolute top-0 right-0 z-10
-                block w-[40px] h-[3px]
-                bg-[var(--color-amber)]
+                block w-10 h-0.75
+                bg-(--color-amber)
               "
               aria-hidden="true"
             />
@@ -341,19 +341,19 @@ export function HeroScrollSequence() {
               <div
                 aria-hidden="true"
                 className={
-                  `absolute inset-0 bg-[var(--color-preloader-bg)] transition-opacity duration-[var(--duration-base)] ` +
+                  `absolute inset-0 bg-(--color-preloader-bg) transition-opacity duration-(--duration-base) ` +
                   (portraitLoaded ? "opacity-0" : "opacity-100")
                 }
               >
-                <div className="absolute inset-0 flex flex-col justify-between p-[var(--space-4)] motion-safe:animate-pulse motion-reduce:animate-none">
-                  <div className="flex items-start justify-between gap-[var(--space-3)]">
-                    <span className="block h-[3px] w-[42px] bg-[var(--color-amber)]" />
-                    <span className="block h-px w-[24%] bg-[var(--color-border)]/30" />
+                <div className="absolute inset-0 flex flex-col justify-between p-(--space-4) motion-safe:animate-pulse motion-reduce:animate-none">
+                  <div className="flex items-start justify-between gap-(--space-3)">
+                    <span className="block h-0.75 w-[42px] bg-(--color-amber)" />
+                    <span className="block h-px w-[24%] bg-(--color-border)/30" />
                   </div>
-                  <div className="flex flex-col gap-[var(--space-3)]">
-                    <span className="block h-[38%] w-[72%] border border-[var(--color-border)]/20 bg-[var(--color-surface)]/5" />
-                    <span className="block h-px w-[52%] bg-[var(--color-border)]/25" />
-                    <span className="block h-px w-[36%] bg-[var(--color-border)]/20" />
+                  <div className="flex flex-col gap-(--space-3)">
+                    <span className="block h-[38%] w-[72%] border border-(--color-border)/20 bg-(--color-surface)/5" />
+                    <span className="block h-px w-[52%] bg-(--color-border)/25" />
+                    <span className="block h-px w-[36%] bg-(--color-border)/20" />
                   </div>
                 </div>
               </div>
@@ -365,7 +365,7 @@ export function HeroScrollSequence() {
                 sizes="(max-width: 1024px) 100vw, 32vw"
                 onLoad={() => setPortraitLoaded(true)}
                 className={
-                  "object-cover object-top [filter:sepia(0.2)_saturate(1.3)] transition-opacity duration-[var(--duration-base)] " +
+                  "object-cover object-top [filter:sepia(0.2)_saturate(1.3)] transition-opacity duration-(--duration-base) " +
                   (portraitLoaded ? "opacity-100" : "opacity-0")
                 }
               />
@@ -375,14 +375,14 @@ export function HeroScrollSequence() {
             <div
               className="
                 absolute bottom-0 left-0
-                bg-[var(--color-preloader-bg)]/80
-                px-[var(--space-3)] py-[var(--space-2)]
+                bg-(--color-preloader-bg)/80
+                px-(--space-3) py-(--space-2)
                 backdrop-blur-sm
               "
             >
               <span
                 className="
-                  font-[var(--font-mono-family)]
+                  font-mono
                   text-[10px]
                   uppercase
                   tracking-[0.14em]

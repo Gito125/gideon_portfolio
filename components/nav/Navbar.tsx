@@ -156,13 +156,13 @@ export function Navbar({ ready }: NavbarProps) {
             <Link
               href="/"
               data-cursor="link"
-              className="font-[var(--font-display-family)] text-[20px] italic tracking-[0.02em] text-[var(--color-text-primary)] transition-colors duration-[var(--duration-base)] hover:text-[var(--color-amber)]"
+              className="font-display text-[20px] italic tracking-[0.02em] text-foreground transition-colors duration-(--duration-base) hover:text-(--color-amber)"
             >
               gideon.dev
             </Link>
 
             {/* Desktop links */}
-            <div className="hidden items-center gap-[var(--space-5)] md:flex">
+            <div className="hidden items-center gap-(--space-5) md:flex">
               {navLinks.map((link) => {
                 const isActive =
                   pathname === link.href || pathname.startsWith(link.href);
@@ -172,10 +172,10 @@ export function Navbar({ ready }: NavbarProps) {
                     key={link.href}
                     href={link.href}
                     data-cursor="link"
-                    className={`label relative pb-[var(--space-1)] transition-colors duration-[var(--duration-base)] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:transition-transform after:duration-300 ${
+                    className={`label relative pb-(--space-1) transition-colors duration-(--duration-base) after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:transition-transform after:duration-300 ${
                       isActive
-                        ? "text-[var(--color-green)] after:scale-x-100 after:bg-[var(--color-green)]"
-                        : "text-[var(--color-text-secondary)] after:scale-x-0 after:bg-[var(--color-text-primary)] hover:text-[var(--color-text-primary)] hover:after:scale-x-100"
+                        ? "text-(--color-green) after:scale-x-100 after:bg-(--color-green)"
+                        : "text-(--color-text-secondary) after:scale-x-0 after:bg-foreground hover:text-foreground hover:after:scale-x-100"
                     }`}
                   >
                     {link.label}
@@ -190,7 +190,7 @@ export function Navbar({ ready }: NavbarProps) {
                 href="/cv/gideon-ddumba-cv.pdf"
                 download
                 data-cursor="cta"
-                className="label inline-flex items-center border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--color-green)] transition-all duration-[var(--duration-base)] hover:bg-[var(--color-green-light)] hover:tracking-widest"
+                className="label inline-flex items-center border border-(--color-green) px-(--space-4) py-(--space-2) text-(--color-green) transition-all duration-(--duration-base) hover:bg-(--color-green-light) hover:tracking-widest"
               >
                 CV
               </Link>
@@ -203,11 +203,11 @@ export function Navbar({ ready }: NavbarProps) {
               aria-expanded={mobileOpen}
               data-cursor="cta"
               onClick={() => setMobileOpen((prev) => !prev)}
-              className="label relative z-[9999] inline-flex h-10 w-10 flex-col items-center justify-center gap-[5px] border border-[var(--color-border)] md:hidden"
+              className="label relative z-[9999] inline-flex h-10 w-10 flex-col items-center justify-center gap-[5px] border border-(--color-border) md:hidden"
             >
               {/* Animated hamburger bars */}
               <span
-                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300 origin-center"
+                className="block h-px w-5 bg-foreground transition-all duration-300 origin-center"
                 style={{
                   transform: mobileOpen
                     ? "translateY(6px) rotate(45deg)"
@@ -215,14 +215,14 @@ export function Navbar({ ready }: NavbarProps) {
                 }}
               />
               <span
-                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300"
+                className="block h-px w-5 bg-foreground transition-all duration-300"
                 style={{
                   opacity: mobileOpen ? 0 : 1,
                   transform: mobileOpen ? "scaleX(0)" : "scaleX(1)",
                 }}
               />
               <span
-                className="block h-px w-5 bg-[var(--color-text-primary)] transition-all duration-300 origin-center"
+                className="block h-px w-5 bg-foreground transition-all duration-300 origin-center"
                 style={{
                   transform: mobileOpen
                     ? "translateY(-6px) rotate(-45deg)"
@@ -315,13 +315,7 @@ export function Navbar({ ready }: NavbarProps) {
                       0{i + 1}
                     </span>
                     <span
-                      style={{
-                        fontFamily: "var(--font-display-family)",
-                        fontSize: 32,
-                        fontWeight: 300,
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1.1,
-                      }}
+                      className="font-display font-light leading-[1.1] tracking-[-0.02em] text-[32px]"
                     >
                       {link.label}
                     </span>
@@ -348,8 +342,7 @@ export function Navbar({ ready }: NavbarProps) {
               if (el) menuItemRefs.current[navLinks.length] = el;
             }}
             onClick={() => setMobileOpen(false)}
-            className="label mt-[var(--space-5)] inline-flex w-fit items-center gap-[var(--space-2)] border border-[var(--color-green)] px-[var(--space-4)] py-[var(--space-3)]"
-            style={{ color: "var(--color-green)" }}
+            className="label mt-(--space-5) inline-flex w-fit items-center gap-(--space-2) border border-(--color-green) px-(--space-4) py-(--space-3) text-(--color-green)"
           >
             Download CV
             <span>↓</span>

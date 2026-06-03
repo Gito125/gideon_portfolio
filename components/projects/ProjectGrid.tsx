@@ -22,28 +22,31 @@ export function ProjectGrid({
 }: ProjectGridProps) {
   const visibleProjects =
     typeof limit === "number" ? projects.slice(0, limit) : projects;
+  const featuredProject = visibleProjects[0];
+  const secondaryProjects = visibleProjects.slice(1, 3);
+  const remainingProjects = visibleProjects.slice(3);
 
   const counter = String(sectionIndex).padStart(2, "0");
 
   return (
     <SectionReveal as="section" className="w-full">
-      <div className="mx-auto w-full max-w-[var(--grid-max-width)] px-[var(--space-5)] py-[var(--space-8)]">
+      <div className="mx-auto w-full max-w-(--grid-max-width) px-(--space-3) py-(--space-7) sm:px-(--space-5) lg:py-(--space-8)">
 
         {/* Section header */}
         <div
           data-reveal-child
-          className="flex flex-wrap items-end justify-between gap-[var(--space-5)]"
+          className="flex flex-col gap-(--space-5) lg:flex-row lg:items-end lg:justify-between"
         >
-          <div className="flex flex-col gap-[var(--space-3)]">
+          <div className="flex flex-col gap-(--space-3)">
 
             {/* Counter + rule */}
-            <div className="flex items-center gap-[var(--space-3)]">
+            <div className="flex items-center gap-(--space-3)">
               <span
                 className="
-                  font-[var(--font-mono-family)]
+                  font-mono
                   text-[clamp(11px,1vw,13px)]
-                  font-[700]
-                  text-[var(--color-amber)]
+                  font-bold
+                  text-(--color-amber)
                   tracking-[0.12em]
                   uppercase
                   leading-none
@@ -53,16 +56,16 @@ export function ProjectGrid({
                 {counter}
               </span>
               <span
-                className="block h-[1px] w-[48px] bg-[var(--color-border)]"
+                className="block h-px w-12 bg-(--color-border)"
                 aria-hidden="true"
               />
               <span
                 className="
-                  font-[var(--font-mono-family)]
+                  font-mono
                   text-[10px]
                   uppercase
                   tracking-[0.14em]
-                  text-[var(--color-text-secondary)]
+                  text-(--color-text-secondary)
                 "
               >
                 Selected Work
@@ -72,11 +75,11 @@ export function ProjectGrid({
             {/* Headline */}
             <h2
               className="
-                font-[var(--font-display-family)]
-                text-[length:var(--text-headline-lg)]
-                leading-[1.12]
+                font-display
+                text-[clamp(2.5rem,5vw,var(--text-headline-lg))]
+                leading-[1.05]
                 tracking-[-0.02em]
-                text-[var(--color-text-primary)]
+                text-foreground
               "
             >
               {title}
@@ -85,8 +88,8 @@ export function ProjectGrid({
             {/* Description */}
             <p
               className="
-                text-[length:var(--text-body-lg)]
-                text-[var(--color-text-secondary)]
+                text-[16px] sm:text-(length:--text-body-lg)
+                text-(--color-text-secondary)
                 leading-[1.6]
                 max-w-[52ch]
               "
@@ -103,13 +106,14 @@ export function ProjectGrid({
               className="
                 group
                 label
-                flex items-center gap-[var(--space-2)]
-                border-b border-[var(--color-green)]
-                pb-[2px]
-                text-[var(--color-green)]
-                transition-colors duration-[var(--duration-base)]
-                hover:text-[var(--color-green-dark)]
-                hover:border-[var(--color-green-dark)]
+                inline-flex items-center gap-(--space-2) self-start
+                border-b border-(--color-green)
+                pb-0.5
+                text-(--color-green)
+                transition-colors duration-(--duration-base)
+                hover:text-(--color-green-dark)
+                hover:border-(--color-green-dark)
+                lg:self-end
               "
             >
               View All Projects
@@ -117,8 +121,8 @@ export function ProjectGrid({
                 className="
                   inline-block
                   translate-x-0
-                  transition-transform duration-[var(--duration-base)]
-                  group-hover:translate-x-[4px]
+                  transition-transform duration-(--duration-base)
+                  group-hover:translate-x-1
                 "
                 aria-hidden="true"
               >
@@ -128,24 +132,46 @@ export function ProjectGrid({
           ) : null}
         </div>
 
-        {/* Grid */}
-        <div
-          data-reveal-child
-          className="mt-[var(--space-7)] grid grid-flow-dense grid-cols-1 gap-[var(--space-5)] md:grid-cols-2 lg:grid-cols-3"
-        >
-          {visibleProjects.map((project, index) => (
-            <div
-              key={project.id}
-              className={index === 0 ? "md:col-span-2" : undefined}
-            >
-              <ProjectCard
-                project={project}
-                priority={index === 0}
-                featured={index === 0}
-              />
+        {featuredProject ? (
+          <div data-reveal-child className="mt-(--space-7)">
+            <div className="grid grid-cols-1 gap-(--space-5) md:grid-cols-2 lg:grid-cols-12">
+              <div className="md:col-span-2 lg:col-span-8">
+                <ProjectCard
+                  project={featuredProject}
+                  priority
+                  featured
+                  variant="featured"
+                />
+              </div>
+
+              {secondaryProjects.length > 0 ? (
+                <div className="grid grid-cols-1 gap-(--space-5) md:col-span-2 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:grid-rows-2">
+                  {secondaryProjects.map((project) => (
+                    <div key={project.id} className="h-full">
+                      <ProjectCard
+                        project={project}
+                        variant="secondary"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
-          ))}
-        </div>
+          </div>
+        ) : null}
+
+        {remainingProjects.length > 0 ? (
+          <div
+            data-reveal-child
+            className="mt-(--space-5) grid grid-cols-1 gap-(--space-5) md:grid-cols-2 xl:grid-cols-3"
+          >
+            {remainingProjects.map((project) => (
+              <div key={project.id} className="h-full">
+                <ProjectCard project={project} variant="default" />
+              </div>
+            ))}
+          </div>
+        ) : null}
 
       </div>
     </SectionReveal>
