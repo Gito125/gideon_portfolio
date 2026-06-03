@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { GhostText } from "@/components/background/GhostText";
+import { ContactForm } from "@/components/contact/ContactForm";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 
 const pageTitle = "Contact Ogwang Gift Gideon";
@@ -21,6 +22,9 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const contactEmail =
+    process.env.MAILER_SENDER_EMAIL?.trim() || "iamgideon125@gmail.com";
+
   return (
     <main className="w-full max-w-full overflow-x-hidden pt-[96px]">
       <GhostText page="contact" />
@@ -50,71 +54,7 @@ export default function ContactPage() {
             data-reveal-child
             className="grid grid-cols-1 gap-[var(--space-7)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]"
           >
-            <form
-              className="flex flex-col gap-[var(--space-4)] border border-[var(--color-border)] p-[var(--space-5)]"
-              method="post"
-            >
-              <div className="flex flex-col gap-[var(--space-2)]">
-                <label
-                  className="label text-[var(--color-text-secondary)]"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Your name"
-                  required
-                  autoComplete="name"
-                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-[var(--space-2)]">
-                <label
-                  className="label text-[var(--color-text-secondary)]"
-                  htmlFor="email"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@email.com"
-                  required
-                  autoComplete="email"
-                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-[var(--space-2)]">
-                <label
-                  className="label text-[var(--color-text-secondary)]"
-                  htmlFor="message"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={6}
-                  placeholder="Project summary, goals, and constraints"
-                  required
-                  className="w-full border-b-2 border-[var(--color-border)] py-[var(--space-2)] text-[length:var(--text-body-md)] transition-colors duration-[var(--duration-fast)] focus:border-[var(--color-green)] focus:text-[var(--color-text-primary)] focus:outline-none resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                data-cursor="cta"
-                className="label inline-flex w-fit items-center justify-center border border-transparent bg-[var(--color-amber)] px-[var(--space-5)] py-[var(--space-3)] text-[var(--color-text-primary)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-amber-dark)] hover:text-[var(--color-bg)]"
-              >
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
 
             <div className="flex flex-col gap-[var(--space-4)]">
               <div className="flex flex-col gap-[var(--space-2)]">
@@ -200,7 +140,7 @@ export default function ContactPage() {
                   </li>
                   <li>
                     <a
-                      href="mailto:iamgideon125@gmail.com"
+                      href={`mailto:${contactEmail}`}
                       data-cursor="link"
                       className="flex items-center gap-[var(--space-3)] text-[length:var(--text-body-md)] text-[var(--color-text-primary)]"
                       aria-label="Email — opens mail client"
@@ -219,7 +159,7 @@ export default function ContactPage() {
                           fill="currentColor"
                         />
                       </svg>
-                      <span>iamgideon125@gmail.com</span>
+                      <span>{contactEmail}</span>
                     </a>
                   </li>
                 </ul>
