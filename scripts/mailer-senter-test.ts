@@ -4,7 +4,7 @@ const mailerSend = new MailerSend({
     apiKey: process.env.MAILER_SENDER_TOKEN || "",
 });
 
-const sentFrom = new Sender("Gideon@test-r83ql3pvyrpgzw1j.mlsender.net", "Gideon");
+const sentFrom = new Sender("sender@example.com", "Gideon");
 
 const recipients = [
     new Recipient("iamgideon125@gmail.com", "Gideon"),
