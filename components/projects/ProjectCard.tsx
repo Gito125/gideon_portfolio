@@ -36,10 +36,10 @@ export function ProjectCard({
 
   const imageAspectClass =
     resolvedVariant === "featured"
-      ? "aspect-[16/10] sm:aspect-[16/9] lg:aspect-[8/5] xl:aspect-[16/9]"
+      ? "aspect-[16/10] sm:aspect-[2/1]"
       : resolvedVariant === "secondary"
-        ? "aspect-[16/10] lg:aspect-[6/4] xl:aspect-[16/10]"
-        : "aspect-[16/10] xl:aspect-[25/13]";
+        ? "aspect-[16/10] sm:aspect-[2/1]"
+        : "aspect-[16/10] sm:aspect-[2/1]";
 
   const imageSizes =
     resolvedVariant === "featured"
@@ -193,16 +193,16 @@ export function ProjectCard({
         className="relative z-content flex h-full flex-col"
         {...(isExternal ? { rel: "noreferrer", target: "_blank" } : {})}
       >
-        {/* Image container — clips the scale animation */}
-        <div className={`relative w-full overflow-hidden border-b border-(--color-border) ${imageAspectClass}`}>
-          <div ref={imageRef} className="absolute inset-0 will-change-transform">
+        {/* Image container — frames the full screenshot without fake cropping. */}
+        <div className={`relative w-full overflow-hidden border-b border-(--color-border) bg-(--color-surface-hover) ${imageAspectClass}`}>
+          <div ref={imageRef} className="absolute inset-2 will-change-transform sm:inset-3">
             <Image
               src={imageSrc}
               alt={`${project.title} preview`}
               fill
               priority={priority}
               sizes={imageSizes}
-              className="object-cover grayscale transition-[filter] duration-400 group-hover:grayscale-0"
+              className="object-contain grayscale transition-[filter] duration-400 group-hover:grayscale-0"
             />
           </div>
 
