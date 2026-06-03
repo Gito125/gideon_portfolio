@@ -70,7 +70,7 @@ gideon-portfolio/
 ├── public/
 │   ├── images/
 │   └── cv/
-│       └── gideon-ddumba-cv.pdf
+│       └── Ogwang_Gift_Gideon_CV.pdf
 └── styles/
     └── globals.css
 ```
@@ -177,7 +177,7 @@ The hero section is a **scroll-pinned section** — GSAP ScrollTrigger pins it w
 | FR-ABOUT-01 | No mention of teaching |
 | FR-ABOUT-02 | Short bio — maximum 3 sentences |
 | FR-ABOUT-03 | Tech stack displayed as categorised grid |
-| FR-ABOUT-04 | CV download button prominent — links to `/public/cv/gideon-ddumba-cv.pdf` |
+| FR-ABOUT-04 | CV download button prominent — links to `/public/cv/Ogwang_Gift_Gideon_CV.pdf` |
 | FR-ABOUT-05 | Photo of Gideon present |
 
 ---

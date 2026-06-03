@@ -201,7 +201,7 @@ Adding a contextual class or Zustand/Context state like `{ cursorState: "view" }
 **GUIDELINES ---**
 Links are Work, About, Contact. Visual bottom border for active links. Nav must remain visible/sticky.
 **EXAMPLE**
-CV Button: `<a href="/cv/gideon-ddumba-cv.pdf" download className="border border-green text-green uppercase text-[12px] tracking-widest px-10 py-4...">...</a>`
+CV Button: `<a href="/cv/Ogwang_Gift_Gideon_CV.pdf" download className="border border-green text-green uppercase text-[12px] tracking-widest px-10 py-4...">...</a>`
 **SUCCESS/FAILURE RULES**
 - **SUCCESS:** CV downloads the correct file. Blur works.
 - **FAILURE:** Nav scrolls out of view or covers content awkwardly.

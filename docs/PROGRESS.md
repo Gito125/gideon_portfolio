@@ -106,7 +106,7 @@
 | ⬜ | Vercel project connected | Auto-deploy on push to `main` |
 | ⬜ | Environment variables set | `RESEND_API_KEY`, `NEXT_PUBLIC_SITE_URL` (Phase 5) |
 | ⬜ | Contact form backend | Skipped so far; form UX only. Needed for FR-CON-02/FR-CON-04. |
-| ⚠️ | CV PDF final | `/public/cv/gideon-ddumba-cv.pdf` exists, but file size indicates placeholder content. Verify final PDF. |
+| ⚠️ | CV PDF final | `/public/cv/Ogwang_Gift_Gideon_CV.pdf` exists, but file size indicates placeholder content. Verify final PDF. |
 
 ---
 

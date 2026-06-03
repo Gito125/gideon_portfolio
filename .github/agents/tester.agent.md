@@ -105,7 +105,7 @@ Map each requirement to its visual outcome:
 - [ ] Hard timeout: preloader completes after 3s if assets fail
 
 #### CV Download
-- [ ] File exists at `/public/cv/gideon-ddumba-cv.pdf`
+- [ ] File exists at `/public/cv/Ogwang_Gift_Gideon_CV.pdf`
 - [ ] Download works from nav CV button
 - [ ] Download works from About page button
 - [ ] Opens/downloads correctly in major browsers
