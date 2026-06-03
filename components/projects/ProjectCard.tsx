@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { primeStrokePath } from "@/lib/animation/gsap-fallbacks";
 import { getGsap, useGSAP } from "@/lib/gsap";
@@ -25,18 +25,20 @@ export function ProjectCard({
   const cardRef      = useRef<HTMLElement>(null);
   const tracePathRef = useRef<SVGPathElement>(null);
   const imageRef     = useRef<HTMLDivElement>(null);
+  const [cacheBuster, setCacheBuster] = useState("");
 
   const href            = project.link ?? project.github ?? "/projects";
   const isExternal      = href.startsWith("http");
   const resolvedVariant = variant ?? (featured ? "featured" : "default");
   const isFeaturedCard  = resolvedVariant === "featured";
   const isSecondaryCard = resolvedVariant === "secondary";
+  const imageSrc        = `${project.image}${cacheBuster}`;
 
   const imageAspectClass =
     resolvedVariant === "featured"
-      ? "aspect-[16/11] sm:aspect-[16/10] lg:aspect-[5/4] xl:aspect-[16/9]"
+      ? "aspect-[16/10] sm:aspect-[16/9] lg:aspect-[8/5] xl:aspect-[16/9]"
       : resolvedVariant === "secondary"
-        ? "aspect-[16/10] lg:aspect-[16/11] xl:aspect-[16/10]"
+        ? "aspect-[16/10] lg:aspect-[6/4] xl:aspect-[16/10]"
         : "aspect-[16/10] xl:aspect-[25/13]";
 
   const imageSizes =
@@ -48,39 +50,53 @@ export function ProjectCard({
 
   const contentClass =
     resolvedVariant === "featured"
-      ? "flex flex-1 flex-col gap-(--space-4) p-(--space-4) sm:p-(--space-5)"
+      ? "flex flex-1 flex-col gap-[18px] p-(--space-4) sm:gap-[20px] sm:p-[28px] xl:p-(--space-5)"
       : resolvedVariant === "secondary"
-        ? "flex flex-1 flex-col gap-(--space-3) p-[20px] sm:p-(--space-4)"
+        ? "flex flex-1 flex-col gap-[12px] p-[18px] sm:gap-[14px] sm:p-[20px] xl:p-[22px]"
         : "flex flex-1 flex-col gap-(--space-3) p-(--space-4)";
 
   const categoryClass =
     resolvedVariant === "featured"
       ? "label flex flex-wrap items-center gap-(--space-2) text-[11px] text-(--color-text-secondary) sm:text-[12px]"
-      : "label flex flex-wrap items-center gap-(--space-2) text-[10px] text-(--color-text-secondary) sm:text-[12px]";
+      : resolvedVariant === "secondary"
+        ? "label flex flex-wrap items-center gap-[6px] text-[10px] text-(--color-text-secondary) sm:text-[11px]"
+        : "label flex flex-wrap items-center gap-(--space-2) text-[10px] text-(--color-text-secondary) sm:text-[12px]";
 
   const titleClass =
     resolvedVariant === "featured"
-      ? "font-display text-[clamp(2.1rem,4vw,3.2rem)] leading-[1.02] tracking-[-0.03em] text-foreground transition-colors duration-(--duration-base)"
+      ? "font-display text-[clamp(2rem,3.8vw,3rem)] leading-[0.98] tracking-[-0.03em] text-foreground transition-colors duration-(--duration-base)"
       : resolvedVariant === "secondary"
-        ? "font-display text-[clamp(2rem,3vw,2.55rem)] leading-[1.08] tracking-[-0.02em] text-foreground transition-colors duration-(--duration-base)"
+        ? "font-display text-[clamp(1.75rem,2.4vw,2.3rem)] leading-[1.02] tracking-[-0.025em] text-foreground transition-colors duration-(--duration-base)"
         : "font-display text-(length:--text-headline-md) leading-[1.2] tracking-[-0.01em] text-foreground transition-colors duration-(--duration-base)";
 
   const descriptionClass =
     resolvedVariant === "featured"
-      ? "max-w-[62ch] text-[15px] leading-[1.75] text-(--color-text-secondary) sm:text-[17px]"
+      ? "max-w-[56ch] text-[15px] leading-[1.65] text-(--color-text-secondary) sm:text-[16px] xl:text-[17px]"
       : resolvedVariant === "secondary"
-        ? "max-w-[40ch] text-[15px] leading-[1.7] text-(--color-text-secondary)"
+        ? "max-w-[34ch] text-[14px] leading-[1.58] text-(--color-text-secondary) sm:text-[15px]"
         : "max-w-[56ch] text-(length:--text-body-md) leading-[1.6] text-(--color-text-secondary)";
 
   const stackRowClass =
     resolvedVariant === "featured"
-      ? "mt-auto flex flex-col gap-(--space-3) border-t border-(--color-border) pt-(--space-3) sm:flex-row sm:items-end sm:justify-between"
-      : "mt-auto flex flex-col gap-(--space-3) border-t border-(--color-border) pt-(--space-3) sm:flex-row sm:items-end sm:justify-between";
+      ? "mt-auto flex flex-col gap-[14px] border-t border-(--color-border) pt-[14px] sm:flex-row sm:items-end sm:justify-between"
+      : resolvedVariant === "secondary"
+        ? "mt-auto flex flex-col gap-[12px] border-t border-(--color-border) pt-[12px]"
+        : "mt-auto flex flex-col gap-(--space-3) border-t border-(--color-border) pt-(--space-3) sm:flex-row sm:items-end sm:justify-between";
 
   const arrowClass =
     resolvedVariant === "featured"
       ? "shrink-0 self-start font-mono text-[22px] text-(--color-green) opacity-0 -translate-x-2 transition-[opacity,transform] duration-(--duration-base) sm:self-auto group-hover:opacity-100 group-hover:translate-x-0"
       : "shrink-0 self-start font-mono text-[18px] text-(--color-green) opacity-0 -translate-x-2 transition-[opacity,transform] duration-(--duration-base) sm:self-auto group-hover:opacity-100 group-hover:translate-x-0";
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      setCacheBuster(`?v=${Date.now()}`);
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [project.image]);
 
   useGSAP(
     () => {
@@ -181,7 +197,7 @@ export function ProjectCard({
         <div className={`relative w-full overflow-hidden border-b border-(--color-border) ${imageAspectClass}`}>
           <div ref={imageRef} className="absolute inset-0 will-change-transform">
             <Image
-              src={project.image}
+              src={imageSrc}
               alt={`${project.title} preview`}
               fill
               priority={priority}
@@ -233,7 +249,7 @@ export function ProjectCard({
 
           {/* Stack tags + arrow */}
           <div className={stackRowClass}>
-            <div className="flex flex-wrap gap-(--space-2)">
+            <div className={`flex flex-wrap ${isSecondaryCard ? "gap-[6px]" : "gap-(--space-2)"}`}>
               {project.stack.map((stackItem) => (
                 <span key={stackItem} className="stack-tag">
                   {stackItem}

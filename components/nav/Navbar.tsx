@@ -187,7 +187,7 @@ export function Navbar({ ready }: NavbarProps) {
             {/* Desktop CV */}
             <div className="hidden md:block">
               <Link
-                href="/cv/gideon-ddumba-cv.pdf"
+                href="/cv/Ogwang_Gift_Gideon_CV.pdf"
                 download
                 data-cursor="cta"
                 className="label inline-flex items-center border border-(--color-green) px-(--space-4) py-(--space-2) text-(--color-green) transition-all duration-(--duration-base) hover:bg-(--color-green-light) hover:tracking-widest"
@@ -335,7 +335,7 @@ export function Navbar({ ready }: NavbarProps) {
 
           {/* CV button */}
           <Link
-            href="/cv/gideon-ddumba-cv.pdf"
+            href="/cv/Ogwang_Gift_Gideon_CV.pdf"
             download
             data-cursor="cta"
             ref={(el) => {

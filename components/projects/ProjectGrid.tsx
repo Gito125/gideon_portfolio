@@ -22,22 +22,19 @@ export function ProjectGrid({
 }: ProjectGridProps) {
   const visibleProjects =
     typeof limit === "number" ? projects.slice(0, limit) : projects;
-  const featuredProject = visibleProjects[0];
-  const secondaryProjects = visibleProjects.slice(1, 3);
-  const remainingProjects = visibleProjects.slice(3);
 
   const counter = String(sectionIndex).padStart(2, "0");
 
   return (
     <SectionReveal as="section" className="w-full">
-      <div className="mx-auto w-full max-w-(--grid-max-width) px-(--space-3) py-(--space-7) sm:px-(--space-5) lg:py-(--space-8)">
+      <div className="mx-auto w-full max-w-(--grid-max-width) px-(--space-3) py-[72px] sm:px-(--space-5) lg:py-[104px]">
 
         {/* Section header */}
         <div
           data-reveal-child
-          className="flex flex-col gap-(--space-5) lg:flex-row lg:items-end lg:justify-between"
+          className="flex flex-col gap-[26px] lg:flex-row lg:items-end lg:justify-between"
         >
-          <div className="flex flex-col gap-(--space-3)">
+          <div className="flex flex-col gap-[14px]">
 
             {/* Counter + rule */}
             <div className="flex items-center gap-(--space-3)">
@@ -91,7 +88,7 @@ export function ProjectGrid({
                 text-[16px] sm:text-(length:--text-body-lg)
                 text-(--color-text-secondary)
                 leading-[1.6]
-                max-w-[52ch]
+                max-w-[48ch]
               "
             >
               {description}
@@ -132,42 +129,19 @@ export function ProjectGrid({
           ) : null}
         </div>
 
-        {featuredProject ? (
-          <div data-reveal-child className="mt-(--space-7)">
-            <div className="grid grid-cols-1 gap-(--space-5) md:grid-cols-2 lg:grid-cols-12">
-              <div className="md:col-span-2 lg:col-span-8">
-                <ProjectCard
-                  project={featuredProject}
-                  priority
-                  featured
-                  variant="featured"
-                />
-              </div>
-
-              {secondaryProjects.length > 0 ? (
-                <div className="grid grid-cols-1 gap-(--space-5) md:col-span-2 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:grid-rows-2">
-                  {secondaryProjects.map((project) => (
-                    <div key={project.id} className="h-full">
-                      <ProjectCard
-                        project={project}
-                        variant="secondary"
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-
-        {remainingProjects.length > 0 ? (
+        {visibleProjects.length > 0 ? (
           <div
             data-reveal-child
-            className="mt-(--space-5) grid grid-cols-1 gap-(--space-5) md:grid-cols-2 xl:grid-cols-3"
+            className="mt-[64px] sm:mt-[72px] grid grid-cols-1 gap-[22px] md:grid-cols-2 lg:gap-(--space-5)"
           >
-            {remainingProjects.map((project) => (
+            {visibleProjects.map((project, index) => (
               <div key={project.id} className="h-full">
-                <ProjectCard project={project} variant="default" />
+                <ProjectCard
+                  project={project}
+                  priority={index === 0}
+                  featured={index === 0}
+                  variant={index === 0 ? "featured" : "default"}
+                />
               </div>
             ))}
           </div>

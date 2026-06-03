@@ -46,7 +46,7 @@ export default function AboutPage() {
               </p>
               <div className="flex flex-wrap gap-(--space-3)">
                 <Link
-                  href="/cv/gideon-ddumba-cv.pdf"
+                  href="/cv/Ogwang_Gift_Gideon_CV.pdf"
                   download
                   data-cursor="cta"
                   className="label inline-flex items-center justify-center border border-(--color-green) px-(--space-5) py-(--space-3) text-(--color-green) transition-colors duration-(--duration-base) hover:bg-(--color-green-light)"
