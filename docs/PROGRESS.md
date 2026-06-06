@@ -83,7 +83,7 @@
 
 | Status | Component | SRS IDs | Notes |
 |--------|-----------|---------|-------|
-| ⚠️ | `app/contact/page.tsx` | FR-CON-01, FR-CON-03, FR-CON-05 | Static form, socials, email link, and underline styling complete. FR-CON-02 backend and FR-CON-04 success/error states pending. |
+| ✅ | `app/contact/page.tsx` | FR-CON-01 → FR-CON-05 | Complete. Form posts to `/api/contact`, shows success/error states, and supports Resend/MailerSend/Brevo/none providers. |
 
 ---
 
@@ -104,8 +104,8 @@
 | ✅ | Form input focus styles | Enhanced in contact page with green border on focus + accessibility CSS in globals.css. |
 | ⚠️ | Lighthouse audit | Pending. To be run on deployed Vercel instance or local build. |
 | ⬜ | Vercel project connected | Auto-deploy on push to `main` |
-| ⬜ | Environment variables set | `RESEND_API_KEY`, `NEXT_PUBLIC_SITE_URL` (Phase 5) |
-| ⬜ | Contact form backend | Skipped so far; form UX only. Needed for FR-CON-02/FR-CON-04. |
+| ⚠️ | Environment variables set | Contact mailer now supports `EMAIL_PROVIDER`, `RESEND_TOKEN`, `SENDER_EMAIL`, `CONTACT_FORM_RECIPIENT_EMAIL`, and `EMAIL_RATE_LIMIT_PER_HOUR`; deployment values still need verification. |
+| ✅ | Contact form backend | `/api/contact` sends owner + sender emails through configured provider and enforces hourly rate limit. |
 | ⚠️ | CV PDF final | `/public/cv/Ogwang_Gift_Gideon_CV.pdf` exists, but file size indicates placeholder content. Verify final PDF. |
 
 ---
@@ -118,9 +118,9 @@
 | ⬜ | Lighthouse Accessibility | ≥ 90 | — |
 | ⬜ | First Contentful Paint | < 1.5s | — |
 | ⬜ | Cumulative Layout Shift | = 0 | — |
-| ✅ | `pnpm type-check` | 0 errors | PASS (2026-05-04) |
+| ✅ | `pnpm type-check` | 0 errors | PASS (2026-06-06) |
 | ❌ | `pnpm lint` | 0 errors | FAIL (2026-05-04): `react-hooks/set-state-in-effect` in Preloader, CustomCursor, Navbar. |
-| ✅ | `pnpm build` | Clean build | PASS (2026-05-04). Required network access for `next/font/google` fetch. |
+| ✅ | `pnpm build` | Clean build | PASS (2026-06-06). Required network access for `next/font/google` fetch. |
 | ⬜ | Mobile usability (Lighthouse) | ≥ 90 | — |
 
 ---
@@ -131,7 +131,7 @@
 |--------|-------|-----------|-----------|
 | ❌ | `pnpm lint` fails on `react-hooks/set-state-in-effect`. | 2026-05-04 | Refactor synchronous setState in `Preloader.tsx`, `CustomCursor.tsx`, and `Navbar.tsx`. |
 | ⚠️ | Hero sequence does not yet include Acadex mockup/green trace segment and exact FR-HERO-04 stat copy. | 2026-05-04 | Align `HeroScrollSequence.tsx` with FR-HERO-04 and the 45-70% SRS segment. |
-| ⚠️ | Contact form lacks backend submission and success/error states. | 2026-05-04 | Implement Resend/Vercel function and UI states for FR-CON-02/FR-CON-04. |
+| ✅ | Contact form lacked backend submission and success/error states. | 2026-05-04 | Implemented provider-based `/api/contact` email delivery and UI states for FR-CON-02/FR-CON-04. |
 | ⚠️ | Pages return `<main>` while `AppShell` also wraps route content in `<main id="main-content">`. | 2026-05-04 | Keep one main landmark per page. |
 | ⚠️ | Mobile nav panel is implemented as a bottom sheet, not a strict full-screen menu panel. | 2026-05-04 | Decide whether the bottom-sheet design is accepted or revise to match FR-NAV-05 exactly. |
 | ⚠️ | Hard-coded z-index utilities remain in several components despite semantic z-index tokens. | 2026-05-04 | Replace remaining `z-[...]`/numeric z classes with semantic utilities or variables. |
@@ -166,6 +166,7 @@
 
 | Date | What Changed |
 |------|--------------|
+| 2026-06-06 | Implemented contact mailer provider switch for Resend/MailerSend/Brevo/none, added recipient env support, enforced hourly rate limit, and verified type-check/build. |
 | 2026-05-04 | Studied `app`, `components`, `config`, `data`, `docs`, and `lib`; updated tracker with background system, SEO metadata, current SRS gaps, and fresh quality gate results. |
 | 2026-04-29 | **Phase 4 Polish (In Progress):** Z-index tokens created + GSAP Club plugins activated + hero image replaced + accessibility improvements (skip-to-content, form focus). |
 | 2026-04-28 | Added placeholder assets for missing hero/project images and CV files; updated Phase 2 tracker statuses to match implementation. |

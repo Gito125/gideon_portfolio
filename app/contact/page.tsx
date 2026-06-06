@@ -23,7 +23,10 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   const contactEmail =
-    process.env.MAILER_SENDER_EMAIL?.trim() || "iamgideon125@gmail.com";
+    process.env.CONTACT_FORM_RECIPIENT_EMAIL?.trim() ||
+    process.env.SENDER_EMAIL?.trim() ||
+    process.env.MAILER_SENDER_EMAIL?.trim() ||
+    "iamgideon125@gmail.com";
 
   return (
     <main className="w-full max-w-full overflow-x-hidden pt-[96px]">
@@ -159,7 +162,7 @@ export default function ContactPage() {
                           fill="currentColor"
                         />
                       </svg>
-                      <span>iamgideon125@gmail.com</span>
+                      <span>{contactEmail}</span>
                     </a>
                   </li>
                 </ul>
