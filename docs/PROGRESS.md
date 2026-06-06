@@ -166,6 +166,7 @@
 
 | Date | What Changed |
 |------|--------------|
+| 2026-06-06 | Aligned contact sender/receiver email templates with portfolio visual system: sharp bordered panels, off-white paper background, amber identity accents, green confirmation/status details, and cleaner metadata/message layout. |
 | 2026-06-06 | Implemented contact mailer provider switch for Resend/MailerSend/Brevo/none, added recipient env support, enforced hourly rate limit, and verified type-check/build. |
 | 2026-05-04 | Studied `app`, `components`, `config`, `data`, `docs`, and `lib`; updated tracker with background system, SEO metadata, current SRS gaps, and fresh quality gate results. |
 | 2026-04-29 | **Phase 4 Polish (In Progress):** Z-index tokens created + GSAP Club plugins activated + hero image replaced + accessibility improvements (skip-to-content, form focus). |
